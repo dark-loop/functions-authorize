@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
         <Version>0.0.1-preview</Version>
@@ -16,7 +16,11 @@
         <PackageReference Include="Microsoft.Azure.Functions.Extensions" Version="1.1.0" />
         <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Http" Version="3.0.2" />
         <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.10.0" />
-        <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="3.0.11" />
+        <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="3.0.11">
+            <IncludeAssets>
+                <IsPackable>true</IsPackable>
+            </IncludeAssets>
+        </PackageReference>
     </ItemGroup>
     <ItemGroup>
         <None Update="local.settings.json">
