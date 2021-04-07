@@ -9,7 +9,15 @@
         <AzureFunctionsVersion>v3</AzureFunctionsVersion>
     </PropertyGroup>
 
-    <Import Project="..\..\.build\release.props" Condition=" '$(Configuration)' == 'Release' "/>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+      <DefineConstants>TRACE</DefineConstants>
+    </PropertyGroup>
+    
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <DefineConstants>DEBUG;TRACE</DefineConstants>
+    </PropertyGroup>
+
+    <Import Project="..\..\.build\release.props" Condition=" '$(Configuration)' == 'Release' " />
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.2.0" />
