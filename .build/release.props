@@ -1,0 +1,16 @@
+﻿<Project>
+
+  <PropertyGroup>
+    <Authors>Arturo Martinez</Authors>
+    <PackageId>DarkLoop.Azure.Functions.Authorize</PackageId>
+    <Version>3.0.11-preview</Version>
+    <PackageLicenseUrl>https://github.com/dark-loop/functions-authorize/blob/master/LICENSE</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/dark-loop/functions-authorize</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <PackageTags>AuthorizeAttribute, Authorize, Azure Functions</PackageTags>
+    <PackageIconUrl>https://en.gravatar.com/userimage/22176525/45f25acea686a783e5b2ca172d72db71.png</PackageIconUrl>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>dl-sftwr-sn-key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+</Project>

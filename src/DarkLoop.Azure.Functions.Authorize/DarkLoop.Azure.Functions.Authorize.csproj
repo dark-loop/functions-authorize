@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <Version>0.0.1-preview</Version>
+        <Company>DarkLoop</Company>
+        <Copyright>DarkLoop - All rights reserved</Copyright>
+        <Product>Azure Functions Authorize</Product>
+        <Description>Allows same AuthorizeAttribute behavior for Azure Functions V3+</Description>
+        <AzureFunctionsVersion>v3</AzureFunctionsVersion>
+    </PropertyGroup>
+
+    <Import Project="..\..\.build\release.props" Condition=" '$(Configuration)' == 'Release' "/>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.2.0" />
+        <PackageReference Include="Microsoft.Azure.Functions.Extensions" Version="1.1.0" />
+        <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Http" Version="3.0.2" />
+        <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.10.0" />
+        <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="3.0.11" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Update="local.settings.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+        </None>
+    </ItemGroup>
+</Project>
