@@ -7,11 +7,11 @@
         <AssemblyVersion>3.0.0.0</AssemblyVersion>
         <Version>3.0.11</Version>
         <FileVersion>$(Version).0</FileVersion>
-        <PackageLicenseUrl>https://github.com/dark-loop/functions-authorize/blob/master/LICENSE</PackageLicenseUrl>
         <RepositoryUrl>https://github.com/dark-loop/functions-authorize</RepositoryUrl>
+        <License>https://github.com/dark-loop/functions-authorize/blob/master/LICENSE</License>
         <RepositoryType>Git</RepositoryType>
         <PackageTags>AuthorizeAttribute, Authorize, Azure Functions</PackageTags>
-        <PackageIconUrl>https://en.gravatar.com/userimage/22176525/45f25acea686a783e5b2ca172d72db71.png</PackageIconUrl>
+        <PackageIcon>https://en.gravatar.com/userimage/22176525/45f25acea686a783e5b2ca172d72db71.png</PackageIcon>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>dl-sftwr-sn-key.snk</AssemblyOriginatorKeyFile>
         <IsPackable>true</IsPackable>
