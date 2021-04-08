@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -21,9 +22,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            var services = builder.Services;
-            return services.AddAuthentication()
-                .AddScriptFunctionsJwtBearer();
+            return builder.AddAuthentication(null);
         }
 
         public static AuthenticationBuilder AddAuthentication(
@@ -34,15 +33,18 @@ namespace Microsoft.Extensions.DependencyInjection
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            if (configure == null)
+            if(configure!=null)
             {
-                throw new ArgumentNullException(nameof(configure));
+                builder.Services.AddSingleton<IConfigureOptions<AuthenticationOptions>>(provider =>
+                    new ConfigureOptions<AuthenticationOptions>(options =>
+                    {
+                        configure(options);
+                    }));
             }
 
-            var services = builder.Services;
-
-            services.Configure(configure);
-            return builder.AddAuthentication();
+            return builder.Services
+                .AddAuthentication()
+                .AddScriptFunctionsJwtBearer();
         }
 
         private static AuthenticationBuilder AddScriptFunctionsJwtBearer(this AuthenticationBuilder builder)
