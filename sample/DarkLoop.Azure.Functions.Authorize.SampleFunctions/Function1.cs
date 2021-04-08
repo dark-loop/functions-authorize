@@ -7,7 +7,7 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace DarkLoop.Azure.Functions.Authorize.TestFunctions
+namespace DarkLoop.Azure.Functions.Authorize.SampleFunctions
 {
     public static class TestFunction
     {

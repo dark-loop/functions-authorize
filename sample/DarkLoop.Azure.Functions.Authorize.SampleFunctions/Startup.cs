@@ -1,4 +1,4 @@
-﻿using DarkLoop.Azure.Functions.Authorize.TestFunctions;
+﻿using DarkLoop.Azure.Functions.Authorize.SampleFunctions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
@@ -10,7 +10,7 @@ using System.Text;
 
 [assembly: FunctionsStartup(typeof(Startup))]
 
-namespace DarkLoop.Azure.Functions.Authorize.TestFunctions
+namespace DarkLoop.Azure.Functions.Authorize.SampleFunctions
 {
     class Startup : FunctionsStartup
     {
@@ -28,7 +28,7 @@ namespace DarkLoop.Azure.Functions.Authorize.TestFunctions
                 {
                     options.Authority = $"{Configuration["AzureAD:Instance"]}{Configuration["AzureAD:TenantId"]}";
                     options.Audience = Configuration["AzureAD:ApiIdUrl"];
-                    //options.Challenge = $"Bearer realm=\"\", authorization_uri=\"{Configuration["AzureAD:Instance"]}{Configuration["AzureAD:TenantId"]}/oauth2/authorize\", client_id=\"{Configuration["AzureAD:ApiClientId"]}\"";
+                    options.Challenge = $"Bearer realm=\"\", authorization_uri=\"{Configuration["AzureAD:Instance"]}{Configuration["AzureAD:TenantId"]}/oauth2/authorize\", client_id=\"{Configuration["AzureAD:ApiClientId"]}\"";
 
                     options.Events = new JwtBearerEvents
                     {
@@ -42,6 +42,7 @@ namespace DarkLoop.Azure.Functions.Authorize.TestFunctions
                         },
                         OnChallenge = async x =>
                         {
+                            // un-commenting the following lines would override what the internals do to send an unauthorized response
                             //var response = x.Response;
                             //response.ContentType = "text/plain";
                             //response.ContentLength = 5;
