@@ -56,7 +56,7 @@ namespace MyFunctionAppNamespace
 No need to register the middleware the way we do for ASP.NET Core applications.
 
 ### Using the attribute
-And now lets use `WebJobAuthorizeAttribute` the same way we use `AuthorizeAttribute` in our ASP.NET Core applications.
+And now lets use `FunctionAuthorizeAttribute` the same way we use `AuthorizeAttribute` in our ASP.NET Core applications.
 ```C#
 public class Functions
 {
