@@ -20,7 +20,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            builder.Services.AddAuthorization();
+            builder.Services.AddAuthorizationCore();
             return builder;
         }
 

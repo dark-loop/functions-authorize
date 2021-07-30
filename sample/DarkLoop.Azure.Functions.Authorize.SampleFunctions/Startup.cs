@@ -51,6 +51,8 @@ namespace DarkLoop.Azure.Functions.Authorize.SampleFunctions
                         }
                     };
                 });
+
+            builder.AddAuthorization();
         }
 
         public override void ConfigureAppConfiguration(IFunctionsConfigurationBuilder builder)
