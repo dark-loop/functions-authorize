@@ -21,7 +21,7 @@ namespace DarkLoop.Azure.Functions.Authorize.Bindings
             _filtersIndex = filterIndex;
         }
 
-        public async Task<IBinding> TryCreateAsync(BindingProviderContext context)
+        public async Task<IBinding?> TryCreateAsync(BindingProviderContext context)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
 
@@ -29,7 +29,6 @@ namespace DarkLoop.Azure.Functions.Authorize.Bindings
             if (paramType == typeof(HttpRequest) || paramType == typeof(HttpRequestMessage))
             {
                 await this.ProcessAuthorizationAsync(context.Parameter);
-                Console.WriteLine($"Processed auth info for {context.Parameter.Member.Name}.");
             }
 
             return null;
@@ -38,6 +37,9 @@ namespace DarkLoop.Azure.Functions.Authorize.Bindings
         private Task ProcessAuthorizationAsync(ParameterInfo info)
         {
             var method = info.Member as MethodInfo;
+
+            if (method == null) throw new InvalidOperationException($"Unable to bind authorization context for {info.Name}.");
+
             var cls = method.DeclaringType;
 
             var allowAnonymous = method.GetCustomAttribute<AllowAnonymousAttribute>();

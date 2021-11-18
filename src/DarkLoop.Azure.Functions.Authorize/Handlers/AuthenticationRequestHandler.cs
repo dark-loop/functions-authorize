@@ -12,7 +12,7 @@ namespace DarkLoop.Azure.Functions.Authorize.Handlers
 {
     public static class AuthenticationRequestHandler
     {
-        public static async Task<IActionResult> HandleAuthenticateAsync(HttpContext context, string scheme)
+        public static async Task<IActionResult?> HandleAuthenticateAsync(HttpContext context, string scheme)
         {
             var handler = await GetSchemeHandler(context, scheme);
             if(await handler.HandleRequestAsync())

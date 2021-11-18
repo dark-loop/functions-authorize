@@ -7,6 +7,8 @@
         <Product>Azure Functions Authorize</Product>
         <Description>Allows same AuthorizeAttribute behavior for Azure Functions V3+</Description>
         <AzureFunctionsVersion>v3</AzureFunctionsVersion>
+        <Nullable>enable</Nullable>
+        <UserSecretsId>3472ff41-3859-4101-a2da-6c37d751fd31</UserSecretsId>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -21,10 +23,9 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.2.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="3.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="3.0.3" />
         <PackageReference Include="Microsoft.Azure.Functions.Extensions" Version="1.1.0" />
         <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Http" Version="3.0.2" />
-        <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.10.0" />
         <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="3.0.12">
             <IncludeAssets>
                 <IsPackable>true</IsPackable>

@@ -46,6 +46,7 @@ namespace DarkLoop.Azure.Functions.Authorize.SampleFunctions
                             //var response = x.Response;
                             //response.ContentType = "text/plain";
                             //response.ContentLength = 5;
+                            //response.StatusCode = 401;
                             //await response.WriteAsync("No go");
                             //await response.Body.FlushAsync();
                         }

@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using DarkLoop.Azure.Functions.Authorize;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
@@ -26,14 +27,14 @@ namespace Microsoft.Extensions.DependencyInjection
         }
 
         public static AuthenticationBuilder AddAuthentication(
-            this IFunctionsHostBuilder builder, Action<AuthenticationOptions> configure)
+            this IFunctionsHostBuilder builder, Action<AuthenticationOptions>? configure)
         {
             if (builder == null)
             {
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            if(configure!=null)
+            if (configure != null)
             {
                 builder.Services.AddSingleton<IConfigureOptions<AuthenticationOptions>>(provider =>
                     new ConfigureOptions<AuthenticationOptions>(options =>
@@ -49,7 +50,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
         private static AuthenticationBuilder AddScriptFunctionsJwtBearer(this AuthenticationBuilder builder)
         {
-            return builder.AddJwtBearer("WebJobsAuthLevel", options =>
+            return builder.AddJwtBearer(Constants.WebJobsAuthScheme, options =>
             {
                 options.Events = new JwtBearerEvents
                 {

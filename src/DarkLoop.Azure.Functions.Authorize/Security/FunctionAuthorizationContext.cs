@@ -15,6 +15,6 @@ namespace DarkLoop.Azure.Functions.Authorize.Security
 
         public HttpContext HttpContext { get; }
 
-        public IActionResult Result { get; internal set; }
+        public IActionResult? Result { get; internal set; }
     }
 }

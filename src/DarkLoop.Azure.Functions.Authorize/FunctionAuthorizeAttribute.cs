@@ -22,11 +22,11 @@ namespace DarkLoop.Azure.Functions.Authorize
             this.Policy = policy;
         }
 
-        public string Policy { get; set; }
+        public string? Policy { get; set; }
 
-        public string Roles { get; set; }
+        public string? Roles { get; set; }
 
-        public string AuthenticationSchemes { get; set; }
+        public string? AuthenticationSchemes { get; set; }
 
         async Task IFunctionInvocationFilter.OnExecutingAsync(FunctionExecutingContext executingContext, CancellationToken cancellationToken)
         {
@@ -53,7 +53,7 @@ namespace DarkLoop.Azure.Functions.Authorize
             return (bool)value;
         }
 
-        private HttpContext GetHttpContext(FunctionExecutingContext context)
+        private HttpContext? GetHttpContext(FunctionExecutingContext context)
         {
             var requestOrMessage = context.Arguments.Values.FirstOrDefault(x => x is HttpRequest || x is HttpRequestMessage);
 
