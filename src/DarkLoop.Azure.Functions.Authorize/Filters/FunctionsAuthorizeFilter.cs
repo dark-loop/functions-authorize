@@ -13,6 +13,11 @@ namespace DarkLoop.Azure.Functions.Authorize.Filters
 {
     internal class FunctionsAuthorizeFilter : IFunctionsAuthorizeFilter
     {
+        private static readonly IEnumerable<string> __dismissedSchemes = 
+            AuthHelper.EnableAuth ? 
+                new[] { Constants.WebJobsAuthScheme } :
+                new[] { Constants.WebJobsAuthScheme, Constants.ArmTokenAuthScheme };  
+
         public IEnumerable<IAuthorizeData> AuthorizeData { get; }
 
         public IAuthenticationSchemeProvider SchemeProvider { get; }
@@ -39,7 +44,7 @@ namespace DarkLoop.Azure.Functions.Authorize.Filters
             var schemes = this.SchemeProvider.GetAllSchemesAsync().GetAwaiter().GetResult();
             var strSchemes = string.Join(',',
                 from scheme in schemes
-                where scheme.Name != Constants.WebJobsAuthScheme
+                where !__dismissedSchemes.Contains(scheme.Name)
                 select scheme.Name);
 
             foreach (var data in this.AuthorizeData)

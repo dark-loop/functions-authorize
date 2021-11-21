@@ -11,6 +11,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DarkLoop.Azure.Functions.Authorize
 {
+    /// <summary>
+    /// Represents authorization logic that needs to be applied to a function.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
     [Obsolete("This class is dependent on Azure Functions preview features.")]
     public class FunctionAuthorizeAttribute : FunctionInvocationFilterAttribute, IFunctionInvocationFilter, IAuthorizeData
@@ -22,10 +25,19 @@ namespace DarkLoop.Azure.Functions.Authorize
             this.Policy = policy;
         }
 
+        /// <summary>
+        /// Gets or sets the name of the authorization policy to apply to function.
+        /// </summary>
         public string? Policy { get; set; }
 
+        /// <summary>
+        /// Gets or sets a comma separated list of roles that are required to execute function.
+        /// </summary>
         public string? Roles { get; set; }
 
+        /// <summary>
+        /// Gets or sets a comma separated list of authentication schemes that are required to apply the authorization logic.
+        /// </summary>
         public string? AuthenticationSchemes { get; set; }
 
         async Task IFunctionInvocationFilter.OnExecutingAsync(FunctionExecutingContext executingContext, CancellationToken cancellationToken)

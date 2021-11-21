@@ -8,5 +8,6 @@ namespace DarkLoop.Azure.Functions.Authorize
     {
         internal const string AuthInvokedKey = "__WebJobAuthInvoked";
         internal const string WebJobsAuthScheme = "WebJobsAuthLevel";
+        internal const string ArmTokenAuthScheme = "ArmToken";
     }
 }

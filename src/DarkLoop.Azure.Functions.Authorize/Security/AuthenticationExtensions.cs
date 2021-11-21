@@ -1,32 +1,37 @@
 ﻿using System;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using DarkLoop.Azure.Functions.Authorize;
+using DarkLoop.Azure.Functions.Authorize.Security;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
-using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
     public static class AuthenticationExtensions
     {
-        private const string AuthLevelClaimType = "http://schemas.microsoft.com/2017/07/functions/claims/authlevel";
-
-        public static AuthenticationBuilder AddAuthentication(this IFunctionsHostBuilder builder)
+        /// <summary>
+        /// Configures authentication for the Azure Functions app. It will setup Functions built-in authentication.
+        /// </summary>
+        /// <param name="builder">The <see cref="IFunctionsHostBuilder"/> for the current application.</param>
+        /// <returns>A <see cref="FunctionsAuthenticationBuilder"/> instance to configure authentication schemes.</returns>
+        /// <exception cref="ArgumentNullException">When builder is null.</exception>
+        public static FunctionsAuthenticationBuilder AddAuthentication(this IFunctionsHostBuilder builder)
         {
             if (builder == null)
             {
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            return builder.AddAuthentication(null);
+            return builder.AddAuthentication(delegate { });
         }
 
-        public static AuthenticationBuilder AddAuthentication(
+        /// <summary>
+        /// Configures authentication for the Azure Functions app. It will setup Functions built-in authentication.
+        /// </summary>
+        /// <param name="builder">The <see cref="IFunctionsHostBuilder"/> for the current application.</param>
+        /// <param name="configure">The <see cref="AuthenticationOptions"/> configuration logic.</param>
+        /// <returns>A <see cref="FunctionsAuthenticationBuilder"/> instance to configure authentication schemes.</returns>
+        /// <exception cref="ArgumentNullException">When builder is null.</exception>
+        public static FunctionsAuthenticationBuilder AddAuthentication(
             this IFunctionsHostBuilder builder, Action<AuthenticationOptions>? configure)
         {
             if (builder == null)
@@ -43,50 +48,25 @@ namespace Microsoft.Extensions.DependencyInjection
                     }));
             }
 
-            return builder.Services
-                .AddAuthentication()
-                .AddScriptFunctionsJwtBearer();
-        }
+            builder.Services
+                .AddAuthentication();
+         
+            var authBuilder = new FunctionsAuthenticationBuilder(builder);
 
-        private static AuthenticationBuilder AddScriptFunctionsJwtBearer(this AuthenticationBuilder builder)
-        {
-            return builder.AddJwtBearer(Constants.WebJobsAuthScheme, options =>
+            if (AuthHelper.EnableAuth)
             {
-                options.Events = new JwtBearerEvents
-                {
-                    OnMessageReceived = c =>
-                    {
-                        options.TokenValidationParameters = CreateTokenValidationParameters();
-                        return Task.CompletedTask;
-                    },
-
-                    OnTokenValidated = c =>
-                    {
-                        c.Principal.AddIdentity(new ClaimsIdentity(new Claim[] { new Claim(AuthLevelClaimType, AuthorizationLevel.Admin.ToString()) }));
-                        c.Success();
-                        return Task.CompletedTask;
-                    }
-                };
-
-                options.TokenValidationParameters = CreateTokenValidationParameters();
-            });
-
-            TokenValidationParameters CreateTokenValidationParameters()
-            {
-                var defaultKey = "2d3a0617-f369-492c-ab7a-f21ec1631376";
-                var result = new TokenValidationParameters();
-
-                if (defaultKey != null)
-                {
-                    result.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(defaultKey));
-                    result.ValidateAudience = true;
-                    result.ValidateIssuer = true;
-                    result.ValidAudience = string.Format("https://{0}.azurewebsites.net/azurefunctions", "func");
-                    result.ValidIssuer = string.Format("https://{0}.scm.azurewebsites.net", "func");
-                }
-
-                return result;
+                EnabledAuthHelper.AddArmToken(authBuilder);
+                EnabledAuthHelper.AddScriptAuthLevel(authBuilder);
+                AuthHelper.AddScriptJwtBearer(authBuilder);
             }
+            else
+            {
+                AuthHelper.AddScriptJwtBearer(authBuilder);
+                DisabledAuthHelper.AddScriptAuthLevel(authBuilder);
+                DisabledAuthHelper.AddArmToken(authBuilder);
+            }
+            
+            return authBuilder;
         }
     }
 }

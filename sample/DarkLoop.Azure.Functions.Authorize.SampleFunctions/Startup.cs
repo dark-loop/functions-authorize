@@ -19,7 +19,7 @@ namespace DarkLoop.Azure.Functions.Authorize.SampleFunctions
         public override void Configure(IFunctionsHostBuilder builder)
         {
             builder
-                .AddAuthentication(options=>
+                .AddAuthentication(options =>
                 {
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -37,7 +37,8 @@ namespace DarkLoop.Azure.Functions.Authorize.SampleFunctions
                             var response = x.Response;
                             response.ContentType = "text/plain";
                             response.ContentLength = 5;
-                            await response.WriteAsync("No go");
+                            response.StatusCode = 401;
+                            await response.WriteAsync("Unauthorized request");
                             await response.Body.FlushAsync();
                         },
                         OnChallenge = async x =>
@@ -51,7 +52,7 @@ namespace DarkLoop.Azure.Functions.Authorize.SampleFunctions
                             //await response.Body.FlushAsync();
                         }
                     };
-                });
+                }, true);
 
             builder.AddAuthorization();
         }
