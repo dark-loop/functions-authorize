@@ -13,8 +13,8 @@ namespace DarkLoop.Azure.Functions.Authorize.Security
     /// </summary>
     public class FunctionsAuthenticationBuilder : AuthenticationBuilder
     {
-        internal FunctionsAuthenticationBuilder(IFunctionsHostBuilder builder)
-            : base(builder.Services) { }
+        internal FunctionsAuthenticationBuilder(IServiceCollection services)
+            : base(services) { }
 
         /// <summary>
         /// Adds the JWT Bearer scheme to the authentication configuration. JWT is added by default to Azure Functions 

@@ -8,7 +8,7 @@ namespace DarkLoop.Azure.Functions.Authorize
     {
         public void Initialize(ExtensionConfigContext context)
         {
-
+            
         }
     }
 }

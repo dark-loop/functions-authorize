@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -9,39 +10,20 @@ namespace DarkLoop.Azure.Functions.Authorize.Security
 {
     internal class EnabledAuthHelper : AuthHelper
     {
-        private static Type ArmExtensionsType =
-            ScriptWebHostAssembly.GetType("Microsoft.Extensions.DependencyInjection.ArmAuthenticationExtensions");
-        private static Type AuthLExtensionsType =
-            ScriptWebHostAssembly.GetType("Microsoft.Extensions.DependencyInjection.AuthLevelExtensions");
-        private static Func<AuthenticationBuilder, AuthenticationBuilder> __armFunc = BuildArmFunc();
-        private static Func<AuthenticationBuilder, AuthenticationBuilder> __authLFunc = BuildAuthLFunc();
-
-        private static Func<AuthenticationBuilder, AuthenticationBuilder> BuildArmFunc()
+        private static Func<IServiceCollection, IServiceCollection> __authNFunc = BuildAuthenticationFunc();
+        
+        private static Func<IServiceCollection, IServiceCollection> BuildAuthenticationFunc()
         {
-            var builder = Expression.Parameter(typeof(AuthenticationBuilder), "builder");
-            var method = Expression.Call(ArmExtensionsType, "AddArmToken", Type.EmptyTypes, builder);
-            var lambda = Expression.Lambda<Func<AuthenticationBuilder, AuthenticationBuilder>>(method, builder);
+            var services = Expression.Parameter(typeof(IServiceCollection), "services");
+            var method = Expression.Call(WebHostSvcCollectionExtType, "AddWebJobsScriptHostAuthentication", Type.EmptyTypes, services);
+            var lambda = Expression.Lambda<Func<IServiceCollection, IServiceCollection>>(method, services);
+
             return lambda.Compile();
         }
 
-        private static Func<AuthenticationBuilder, AuthenticationBuilder> BuildAuthLFunc()
+        internal static void AddBuiltInFunctionsAuthentication(IServiceCollection services)
         {
-            var builder = Expression.Parameter(typeof(AuthenticationBuilder), "builder");
-            var method = Expression.Call(AuthLExtensionsType, "AddScriptAuthLevel", Type.EmptyTypes, builder);
-            var lambda = Expression.Lambda<Func<AuthenticationBuilder, AuthenticationBuilder>>(method, builder);
-            return lambda.Compile();
-        }
-
-        internal static FunctionsAuthenticationBuilder AddArmToken(FunctionsAuthenticationBuilder builder)
-        {
-            __armFunc(builder);
-            return builder;
-        }
-
-        internal static FunctionsAuthenticationBuilder AddScriptAuthLevel(FunctionsAuthenticationBuilder builder)
-        {
-            __authLFunc(builder);
-            return builder;
+            __authNFunc(services);
         }
     }
 }
