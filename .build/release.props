@@ -2,19 +2,21 @@
 
     <PropertyGroup>
         <Authors>Arturo Martinez</Authors>
+		<Company>DarkLoop</Company>
         <PackageId>DarkLoop.Azure.Functions.Authorize</PackageId>
         <IsPreview>true</IsPreview>
         <AssemblyVersion>3.0.0.0</AssemblyVersion>
-        <Version>3.0.12</Version>
+        <Version>3.1.0</Version>
         <FileVersion>$(Version).0</FileVersion>
         <RepositoryUrl>https://github.com/dark-loop/functions-authorize</RepositoryUrl>
         <License>https://github.com/dark-loop/functions-authorize/blob/master/LICENSE</License>
         <RepositoryType>Git</RepositoryType>
-        <PackageTags>AuthorizeAttribute, Authorize, Azure Functions</PackageTags>
+        <PackageTags>AuthorizeAttribute, Authorize, Azure Functions, Azure, Bearer, JWT</PackageTags>
         <PackageIconUrl>https://en.gravatar.com/userimage/22176525/45f25acea686a783e5b2ca172d72db71.png</PackageIconUrl>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>dl-sftwr-sn-key.snk</AssemblyOriginatorKeyFile>
         <IsPackable>true</IsPackable>
+		<Description>Azure Functions V3 authentication extensions to enable authentication and authorization on a per function basis.</Description>
     </PropertyGroup>
 
     <PropertyGroup>
