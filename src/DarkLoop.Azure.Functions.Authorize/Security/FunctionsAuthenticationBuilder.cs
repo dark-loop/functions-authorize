@@ -42,7 +42,12 @@ namespace DarkLoop.Azure.Functions.Authorize.Security
             if(removeBuiltInConfig)
             {
                 var descriptor = Services.FirstOrDefault(s => s.ServiceType == typeof(IConfigureOptions<JwtBearerOptions>));
-                Services.Remove(descriptor);
+                var instance = descriptor?.ImplementationInstance as ConfigureNamedOptions<JwtBearerOptions>;
+
+                if (instance?.Name == "Bearer")
+                {
+                    Services.Remove(descriptor);
+                }
             }
 
             this.Services
