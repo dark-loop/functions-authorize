@@ -90,4 +90,4 @@ public class Functions
 ### Builds
 ![master build status](https://dev.azure.com/darkloop/DarkLoop%20Core%20Library/_apis/build/status/Open%20Source/Functions%20Authorize%20-%20Pack?branchName=master)
 
-[![Analytics](https://ga-beacon.appspot.com/G-QVLBW0Y88L/darkloop/functions-authorize/readme?pixel)](https://github.com/dark-loop/functions-authorize)
+[![Analytics](https://ga-beacon.appspot.com/G-QVLBW0Y88L/functions-authorize/readme?pixel)](https://github.com/dark-loop/ga-beacon)
