@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Net.Http;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
+using DarkLoop.Azure.Functions.Authorize.Filters;
 using DarkLoop.Azure.Functions.Authorize.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -15,7 +17,6 @@ namespace DarkLoop.Azure.Functions.Authorize
     /// Represents authorization logic that needs to be applied to a function.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
-    [Obsolete("This class is dependent on Azure Functions preview features.")]
     public class FunctionAuthorizeAttribute : FunctionInvocationFilterAttribute, IFunctionInvocationFilter, IAuthorizeData
     {
         public FunctionAuthorizeAttribute() { }

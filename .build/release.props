@@ -4,9 +4,9 @@
         <Authors>Arturo Martinez</Authors>
 		<Company>DarkLoop</Company>
         <PackageId>DarkLoop.Azure.Functions.Authorize</PackageId>
-        <IsPreview>false</IsPreview>
+        <IsPreview>true</IsPreview>
         <AssemblyVersion>3.0.0.0</AssemblyVersion>
-        <Version>3.1.0</Version>
+        <Version>3.1.1</Version>
         <FileVersion>$(Version).0</FileVersion>
         <RepositoryUrl>https://github.com/dark-loop/functions-authorize</RepositoryUrl>
         <License>https://github.com/dark-loop/functions-authorize/blob/master/LICENSE</License>

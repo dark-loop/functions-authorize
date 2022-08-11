@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28606.126
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.32804.182
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D96FC724-6F6E-400E-BCA9-21A8FD44CA1C}"
 EndProject
@@ -26,6 +26,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{53EC585B-CE9B-4E7D-B2E2-F7A9B6DA0FE7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DarkLoop.Azure.Functions.Authorize.SampleFunctions", "sample\DarkLoop.Azure.Functions.Authorize.SampleFunctions\DarkLoop.Azure.Functions.Authorize.SampleFunctions.csproj", "{9AB1B297-FA02-406C-A3E2-979A7CC5C706}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6C3D01C4-AFF0-4AE3-ACA1-FDCDF8FD6CE1}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
