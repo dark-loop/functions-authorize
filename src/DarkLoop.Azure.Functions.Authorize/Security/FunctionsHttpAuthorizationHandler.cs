@@ -51,7 +51,7 @@ namespace DarkLoop.Azure.Functions.Authorize.Security
                 await SetResponseAsync("Unauthorized", httpContext.Response);
                 
                 // need to make sure function stops executing. At this moment this is the only way.
-                BombFunctionInstance((int)HttpStatusCode.Unauthorized);
+                BombFunctionInstance(HttpStatusCode.Unauthorized);
             }
 
             if (context.Result is ForbidResult forbid)
@@ -71,7 +71,7 @@ namespace DarkLoop.Azure.Functions.Authorize.Security
                 await SetResponseAsync("Forbidden", httpContext.Response);
 
                 // need to make sure function stops executing. At this moment this is the only way.
-                BombFunctionInstance((int)HttpStatusCode.Forbidden);
+                BombFunctionInstance(HttpStatusCode.Forbidden);
             }
         }
 
@@ -86,10 +86,9 @@ namespace DarkLoop.Azure.Functions.Authorize.Security
             await response.Body.FlushAsync();
         }
 
-        private void BombFunctionInstance(int status)
+        private void BombFunctionInstance(HttpStatusCode status)
         {
-            throw new Exception(
-                $"{status} Authorization error encountered. This is the only way to stop function execution. The correct status has been communicated to caller");
+            throw new FunctionAuthorizationException(status);
         }
     }
 }
