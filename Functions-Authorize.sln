@@ -30,7 +30,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6C3D01C4-AFF0-4AE3-ACA1-FDCDF8FD6CE1}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Darkloop.Azure.Functions.Authorize.SampleFunctions.V4", "sample\Darkloop.Azure.Functions.Authorize.SampleFunctions.V4\Darkloop.Azure.Functions.Authorize.SampleFunctions.V4.csproj", "{0E97CAE1-D5E8-462D-B513-7EF2797C7D48}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,6 +53,10 @@ Global
 		{9AB1B297-FA02-406C-A3E2-979A7CC5C706}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9AB1B297-FA02-406C-A3E2-979A7CC5C706}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9AB1B297-FA02-406C-A3E2-979A7CC5C706}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E97CAE1-D5E8-462D-B513-7EF2797C7D48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E97CAE1-D5E8-462D-B513-7EF2797C7D48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E97CAE1-D5E8-462D-B513-7EF2797C7D48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E97CAE1-D5E8-462D-B513-7EF2797C7D48}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -58,6 +65,7 @@ Global
 		{47791FF8-5FEA-42BC-8192-5A59D23ADE92} = {D96FC724-6F6E-400E-BCA9-21A8FD44CA1C}
 		{CB2B4A20-7882-4003-ADEF-E95F72DA3146} = {051D16F8-54BB-482B-B2A9-47E2DA89E6DB}
 		{9AB1B297-FA02-406C-A3E2-979A7CC5C706} = {53EC585B-CE9B-4E7D-B2E2-F7A9B6DA0FE7}
+		{0E97CAE1-D5E8-462D-B513-7EF2797C7D48} = {53EC585B-CE9B-4E7D-B2E2-F7A9B6DA0FE7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {546E3A6C-060C-4630-BEEE-46A1F8715347}
