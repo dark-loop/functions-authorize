@@ -1,5 +1,5 @@
 # functions-authorize
-Bringing AuthorizeAttribute Behavior to Azure Functions v3
+Bringing AuthorizeAttribute Behavior to Azure Functions v3 and v4 (In-Process)
 
 It hooks into .NET Core dependency injection container to enable authentication and authorization in the same way  ASP.NET Core does.
 
