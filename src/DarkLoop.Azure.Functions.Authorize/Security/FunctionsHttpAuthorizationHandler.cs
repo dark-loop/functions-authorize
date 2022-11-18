@@ -36,39 +36,45 @@ namespace DarkLoop.Azure.Functions.Authorize.Security
 
             if (context.Result is ChallengeResult challenge)
             {
-                if (challenge.AuthenticationSchemes != null && challenge.AuthenticationSchemes.Count > 0)
+                if (!httpContext.Response.HasStarted)
                 {
-                    foreach (var scheme in challenge.AuthenticationSchemes)
+                    if (challenge.AuthenticationSchemes != null && challenge.AuthenticationSchemes.Count > 0)
                     {
-                        await httpContext.ChallengeAsync(scheme);
+                        foreach (var scheme in challenge.AuthenticationSchemes)
+                        {
+                            await httpContext.ChallengeAsync(scheme);
+                        }
                     }
-                }
-                else
-                {
-                    await httpContext.ChallengeAsync();
+                    else
+                    {
+                        await httpContext.ChallengeAsync();
+                    }
+
+                    await SetResponseAsync("Unauthorized", httpContext.Response);
                 }
 
-                await SetResponseAsync("Unauthorized", httpContext.Response);
-                
                 // need to make sure function stops executing. At this moment this is the only way.
                 BombFunctionInstance(HttpStatusCode.Unauthorized);
             }
 
             if (context.Result is ForbidResult forbid)
             {
-                if (forbid.AuthenticationSchemes != null && forbid.AuthenticationSchemes.Count > 0)
+                if (!httpContext.Response.HasStarted)
                 {
-                    foreach (var scheme in forbid.AuthenticationSchemes)
+                    if (forbid.AuthenticationSchemes != null && forbid.AuthenticationSchemes.Count > 0)
                     {
-                        await httpContext.ForbidAsync(scheme);
+                        foreach (var scheme in forbid.AuthenticationSchemes)
+                        {
+                            await httpContext.ForbidAsync(scheme);
+                        }
                     }
-                }
-                else
-                {
-                    await httpContext.ForbidAsync();
-                }
+                    else
+                    {
+                        await httpContext.ForbidAsync();
+                    }
 
-                await SetResponseAsync("Forbidden", httpContext.Response);
+                    await SetResponseAsync("Forbidden", httpContext.Response);
+                }
 
                 // need to make sure function stops executing. At this moment this is the only way.
                 BombFunctionInstance(HttpStatusCode.Forbidden);
