@@ -46,10 +46,8 @@ namespace DarkLoop.Azure.Functions.Authorize.Bindings
 
             if (allowAnonymous != null) return Task.CompletedTask;
 
-#pragma warning disable CS0618 // Type or member is obsolete
             var classAuthAttrs = cls.GetCustomAttributes<FunctionAuthorizeAttribute>();
             var methodAuthAttrs = method.GetCustomAttributes<FunctionAuthorizeAttribute>();
-#pragma warning restore CS0618 // Type or member is obsolete
             var nameAttr = method.GetCustomAttribute<FunctionNameAttribute>();
 
             var allAuthAttributes = classAuthAttrs.Concat(methodAuthAttrs).ToList();
