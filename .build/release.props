@@ -4,7 +4,7 @@
         <Authors>Arturo Martinez</Authors>
 		<Company>DarkLoop</Company>
         <PackageId>DarkLoop.Azure.Functions.Authorize</PackageId>
-        <IsPreview>true</IsPreview>
+        <IsPreview>false</IsPreview>
         <AssemblyVersion>3.0.0.0</AssemblyVersion>
         <Version>3.1.2</Version>
         <FileVersion>$(Version).0</FileVersion>
@@ -17,6 +17,7 @@
         <AssemblyOriginatorKeyFile>dl-sftwr-sn-key.snk</AssemblyOriginatorKeyFile>
         <IsPackable>true</IsPackable>
 		<Description>Azure Functions V3 authentication extensions to enable authentication and authorization on a per function basis.</Description>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -26,5 +27,9 @@
         <PreviewVersion Condition=" '$(IsPreview)' == 'true' ">-preview-$(BuildIDNumber)</PreviewVersion>
         <Version>$(Version)$(PreviewVersion)</Version>
     </PropertyGroup>
+
+	<ItemGroup>
+		<None Include="$(MSBuildThisFileDirectory)..\README.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
 
 </Project>
