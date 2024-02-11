@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -63,7 +64,10 @@ namespace DarkLoop.Azure.Functions.Authorize.SampleFunctions.V4
             // decorated with FunctionAuthorizeAttribute you can add the following configuration.
             // If you bind it to configuration, you can modify the setting remotely using
             // Azure App Configuration or other configuration providers without the need to restart app.
-            builder.Services.Configure<FunctionsAuthorizationOptions>(Configuration.GetSection("AuthOptions"));
+            if (builder.IsLocalAuthorizationContext())
+            {
+                builder.Services.Configure<FunctionsAuthorizationOptions>(Configuration.GetSection("AuthOptions"));
+            }
         }
 
         public override void ConfigureAppConfiguration(IFunctionsConfigurationBuilder builder)
