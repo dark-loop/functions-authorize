@@ -106,7 +106,8 @@ Adding change log starting with version 3.1.3
 
   Optionally you can bind it to configuration to rely on providers like User Secrets or Azure App Configuration to disable and re-enable without having to restart your application:
   ```c#
-  builder.Services.Configure<FunctionsAuthorizationOptions>(Configuration.GetSection("FunctionsAuthorization"));
+  builder.Services.Configure<FunctionsAuthorizationOptions>(
+      Configuration.GetSection("FunctionsAuthorization"));
   ```
 
   For function apps targeting .NET 7 or greater, you can also use `AuthorizationBuilder` to set this value:
@@ -116,7 +117,14 @@ Adding change log starting with version 3.1.3
       .DisableAuthorization(Configuration.GetValue<bool>("AuthOptions:DisableAuthorization"));
   ```
 
-  Its always recommended to encapsulate this logic within checks for environments to ensure that if the configuration setting is unintentionally moved to a non-desired environment, it would not affect security of our HTTP triggered functions.
+  Its always recommended to encapsulate this logic within checks for environments to ensure that if the configuration setting is unintentionally moved to a non-desired environment, it would not affect security of our HTTP triggered functions. This change adds a helper method to identify if you are running the function app in the local environment:
+  ```c#
+  if (builder.IsLocalAuthorizationContext())
+  {
+      builder.Services.Configure<FunctionsAuthorizationOptions>(
+          options => options.AuthorizationDisabled = true);
+  }
+  ```
 
   If you want to output warnings emitted by the library remember to set the log level to `Warning` or lower for `Darkloop` category in your `host.json` file:
 

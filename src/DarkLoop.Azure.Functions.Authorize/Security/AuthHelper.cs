@@ -18,6 +18,8 @@ namespace DarkLoop.Azure.Functions.Authorize.Security
 
         internal static bool EnableAuth { get; private set; }
 
+        internal static bool IsLocalDevelopment => !EnableAuth;
+
         static AuthHelper()
         {
             var entry = Assembly.GetEntryAssembly();
