@@ -1,5 +1,7 @@
 ﻿using DarkLoop.Azure.Functions.Authorize.SampleFunctions.V4;
+using DarkLoop.Azure.Functions.Authorize.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
@@ -56,11 +58,17 @@ namespace DarkLoop.Azure.Functions.Authorize.SampleFunctions.V4
                 }, true);
 
             builder.Services.AddFunctionsAuthorization();
+
+            // If you want to disable authorization for all functions
+            // decorated with FunctionAuthorizeAttribute you can add the following configuration.
+            // If you bind it to configuration, you can modify the setting remotely using
+            // Azure App Configuration or other configuration providers without the need to restart app.
+            builder.Services.Configure<FunctionsAuthorizationOptions>(Configuration.GetSection("AuthOptions"));
         }
 
         public override void ConfigureAppConfiguration(IFunctionsConfigurationBuilder builder)
         {
-            builder.ConfigurationBuilder.AddUserSecrets<Startup>();
+            builder.ConfigurationBuilder.AddUserSecrets<Startup>(false, reloadOnChange: true);
 
             Configuration = builder.ConfigurationBuilder.Build();
 
