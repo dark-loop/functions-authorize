@@ -7,7 +7,7 @@ namespace DarkLoop.Azure.Functions.Authorize.Filters
 {
     interface IFunctionsAuthorizationFilterIndex
     {
-        IFunctionsAuthorizeFilter GetAuthorizationFilter(string functionName);
+        IFunctionsAuthorizeFilter? GetAuthorizationFilter(string functionName);
 
         void AddAuthorizationFilter(MethodInfo functionMethod, FunctionNameAttribute nameAttribute, IEnumerable<IAuthorizeData> authorizeData);
     }
