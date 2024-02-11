@@ -21,9 +21,10 @@ namespace DarkLoop.Azure.Functions.Authorize.Security
         /// and all HTTP functions are applied the Admin level after a token is validated.
         /// </summary>
         /// <param name="removeBuiltInConfig">A value indicating whether remove the built-in configuration for JWT.
-        /// Bearer scheme is still in place, but Admin level is not set incoming requests.</param>
+        /// Bearer scheme is still in place, but Admin level is not set for incoming requests.
+        /// <para>When setting this value to <c>true</c> (default) all existing configuration will be removed.</para></param>
         /// <returns>A instance of the <see cref="FunctionsAuthenticationBuilder"/></returns>
-        public FunctionsAuthenticationBuilder AddJwtBearer(bool removeBuiltInConfig = false)
+        public FunctionsAuthenticationBuilder AddJwtBearer(bool removeBuiltInConfig = true)
         {
             return this.AddJwtBearer(delegate { }, removeBuiltInConfig);
         }
@@ -35,18 +36,25 @@ namespace DarkLoop.Azure.Functions.Authorize.Security
         /// <param name="configureOptions">An action configuring the JWT options for authentication. 
         /// <para>When <see cref="removeBuiltInConfig"/> is set to false, it enhances the built-in configuration for the scheme</para></param>
         /// <param name="removeBuiltInConfig">A value indicating whether remove the built-in configuration for JWT.
-        /// Bearer scheme is still in place, but Admin level is not set incoming requests.</param>
+        /// Bearer scheme is still in place, but Admin level is not set incoming requests.
+        /// <para>When setting this value to <c>true</c> (default) all existing configuration will be removed.</para></param>
         /// <returns>A instance of the <see cref="FunctionsAuthenticationBuilder"/></returns>
-        public FunctionsAuthenticationBuilder AddJwtBearer(Action<JwtBearerOptions> configureOptions, bool removeBuiltInConfig = false)
+        public FunctionsAuthenticationBuilder AddJwtBearer(Action<JwtBearerOptions> configureOptions, bool removeBuiltInConfig = true)
         {
             if(removeBuiltInConfig)
             {
-                var descriptor = Services.FirstOrDefault(s => s.ServiceType == typeof(IConfigureOptions<JwtBearerOptions>));
-                var instance = descriptor?.ImplementationInstance as ConfigureNamedOptions<JwtBearerOptions>;
+                var descriptors = Services
+                    .Where(s => s.ServiceType == typeof(IConfigureOptions<JwtBearerOptions>))
+                    .ToList();
 
-                if (instance?.Name == "Bearer")
+                foreach (var descriptor in descriptors)
                 {
-                    Services.Remove(descriptor);
+                    var instance = descriptor?.ImplementationInstance as ConfigureNamedOptions<JwtBearerOptions>;
+
+                    if (instance?.Name == "Bearer")
+                    {
+                        Services.Remove(descriptor);
+                    }
                 }
             }
 
