@@ -89,3 +89,45 @@ public class Functions
 
 ### Builds
 ![master build status](https://dev.azure.com/darkloop/DarkLoop%20Core%20Library/_apis/build/status/Open%20Source/Functions%20Authorize%20-%20Pack?branchName=master)
+
+## Change log
+Adding change log starting with version 3.1.3
+
+### 3.1.3
+- #### Support for disabling `FunctionAuthorize` effect at the application level.
+  Adding support for disabling the effect of `[FunctionAuthorize]` attribute at the application level.  
+  This is useful when wanting to disable authorization for a specific environment, such as local development.
+
+  When configuring services, you can now configure `FunctionsAuthorizationOptions`.
+  ```c#
+  builder.Services.Configure<FunctionsAuthorizationOptions>(options => 
+      options.DisableAuthorization = Configuration.GetValue<bool>("AuthOptions:DisableAuthorization"));
+  ```
+
+  Optionally you can bind it to configuration to rely on providers like User Secrets or Azure App Configuration to disable and re-enable without having to restart your application:
+  ```c#
+  builder.Services.Configure<FunctionsAuthorizationOptions>(Configuration.GetSection("FunctionsAuthorization"));
+  ```
+
+  For function apps targeting .NET 7 or greater, you can also use `AuthorizationBuilder` to set this value:
+  ```c#
+  builder.Services
+      .AddAuthorizationBuilder()
+      .DisableAuthorization(Configuration.GetValue<bool>("AuthOptions:DisableAuthorization"));
+  ```
+
+  Its always recommended to encapsulate this logic within checks for environments to ensure that if the configuration setting is unintentionally moved to a non-desired environment, it would not affect security of our HTTP triggered functions.
+
+  If you want to output warnings emitted by the library remember to set the log level to `Warning` or lower for `Darkloop` category in your `host.json` file:
+
+  ```json
+  {
+    "logging": {
+      "logLevel": {
+        "DarkLoop": "Warning"
+      }
+    }
+  }
+  ```
+  
+  Thanks to [BenjaminWang1031](https://github.com/BenjaminWang1031) for the suggestion to add this functionality.
