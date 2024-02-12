@@ -28,7 +28,7 @@ namespace Microsoft.Extensions.DependencyInjection
         }
 
         /// <summary>
-        /// Adds Functions built-in auhotrization.
+        /// Adds Functions built-in authorization.
         /// </summary>
         /// <param name="services">The service collection to configure.</param>
         public static IServiceCollection AddFunctionsAuthorization(this IServiceCollection services)
