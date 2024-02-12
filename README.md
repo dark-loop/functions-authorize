@@ -117,7 +117,7 @@ Adding change log starting with version 3.1.3
       .DisableAuthorization(Configuration.GetValue<bool>("AuthOptions:DisableAuthorization"));
   ```
 
-  Its always recommended to encapsulate this logic within checks for environments to ensure that if the configuration setting is unintentionally moved to a non-desired environment, it would not affect security of our HTTP triggered functions. This change adds a helper method to identify if you are running the function app in the local environment:
+  It's always recommended to encapsulate this logic within checks for environments to ensure that if the configuration setting is unintentionally moved to a non-desired environment, it would not affect security of our HTTP triggered functions. This change adds a helper method to identify if you are running the function app in the local environment:
   ```c#
   if (builder.IsLocalAuthorizationContext())
   {
@@ -140,6 +140,6 @@ Adding change log starting with version 3.1.3
   
   Thanks to [BenjaminWang1031](https://github.com/BenjaminWang1031) for the suggestion to add this functionality.
 
-- #### Remove Functions bult-in JwtBearer configuration by default (Breaking change?)
+- #### Remove Functions bult-in JwtBearer configuration by default
   Azure Functions recently [added configuration](https://github.com/Azure/azure-functions-host/pull/9678) for issuer and audience validation for the default authentication flows, not the one supported by this package through `FunctionAuthorizeAttribute`, which interferes with token validation when using our own Bearer scheme token configuration.
   In prior versions, this package has functionality to clear Functions built-in configuration, but it was not enabled by default when using `AddJwtBearer(Action<JwtBearerOptions> configure, bool removeBuiltInConfig = false)`. Since the use of this package is commonly used for custom JWT token, the default value of `removeBuiltInConfig` is now `true`.
