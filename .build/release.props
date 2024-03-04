@@ -16,7 +16,7 @@
     <PackageTags>AuthorizeAttribute, Authorize, Azure Functions, Azure, Bearer, JWT, Policy based authorization</PackageTags>
     <PackageIconUrl>icons/icon.png</PackageIconUrl>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>dl-sftwr-sn-key.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>../dl-sftwr-sn-key.snk</AssemblyOriginatorKeyFile>
     <IsPackable>true</IsPackable>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
