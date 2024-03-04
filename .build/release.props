@@ -1,35 +1,37 @@
 ﻿<Project>
 
-    <PropertyGroup>
-        <Authors>Arturo Martinez</Authors>
-		<Company>DarkLoop</Company>
-        <PackageId>DarkLoop.Azure.Functions.Authorize</PackageId>
-        <IsPreview>false</IsPreview>
-        <AssemblyVersion>3.0.0.0</AssemblyVersion>
-        <Version>3.1.3</Version>
-        <FileVersion>$(Version).0</FileVersion>
-        <RepositoryUrl>https://github.com/dark-loop/functions-authorize</RepositoryUrl>
-        <License>https://github.com/dark-loop/functions-authorize/blob/master/LICENSE</License>
-        <RepositoryType>Git</RepositoryType>
-        <PackageTags>AuthorizeAttribute, Authorize, Azure Functions, Azure, Bearer, JWT, Policy based authorization</PackageTags>
-        <PackageIconUrl>https://en.gravatar.com/userimage/22176525/45f25acea686a783e5b2ca172d72db71.png</PackageIconUrl>
-        <SignAssembly>true</SignAssembly>
-        <AssemblyOriginatorKeyFile>dl-sftwr-sn-key.snk</AssemblyOriginatorKeyFile>
-        <IsPackable>true</IsPackable>
-		<Description>Azure Functions V3 authentication extensions to enable authentication and authorization on a per function basis based on ASPNET Core frameworks.</Description>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
-    </PropertyGroup>
+  <PropertyGroup>
+    <PackageId>$(AssmeblyName)</PackageId>
+    <Authors>Arturo Martinez</Authors>
+    <Company>DarkLoop</Company>
+    <Copyright>DarkLoop - All rights reserved</Copyright>
+    <Product>DarkLoop's Azure Functions Authorization</Product>
+    <IsPreview>true</IsPreview>
+    <AssemblyVersion>4.0.0.0</AssemblyVersion>
+    <Version>4.0.0</Version>
+    <FileVersion>$(Version).0</FileVersion>
+    <RepositoryUrl>https://github.com/dark-loop/functions-authorize</RepositoryUrl>
+    <License>https://github.com/dark-loop/functions-authorize/blob/master/LICENSE</License>
+    <RepositoryType>Git</RepositoryType>
+    <PackageTags>AuthorizeAttribute, Authorize, Azure Functions, Azure, Bearer, JWT, Policy based authorization</PackageTags>
+    <PackageIconUrl>icons/icon.png</PackageIconUrl>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>dl-sftwr-sn-key.snk</AssemblyOriginatorKeyFile>
+    <IsPackable>true</IsPackable>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
 
-    <PropertyGroup>
-        <Revision>$(BuildNumber.Substring($([MSBuild]::Add($(BuildNumber.LastIndexOf('.')), 1))))</Revision>
-        <DateNumber>$([System.DateTime]::Now.ToString('yyMMdd'))</DateNumber>
-        <BuildIDNumber>$(DateNumber)-$(Revision)</BuildIDNumber>
-        <PreviewVersion Condition=" '$(IsPreview)' == 'true' ">-preview-$(BuildIDNumber)</PreviewVersion>
-        <Version>$(Version)$(PreviewVersion)</Version>
-    </PropertyGroup>
+  <PropertyGroup>
+    <Revision>$(BuildNumber.Substring($([MSBuild]::Add($(BuildNumber.LastIndexOf('.')), 1))))</Revision>
+    <DateNumber>$([System.DateTime]::Now.ToString('yyMMdd'))</DateNumber>
+    <BuildIDNumber>$(DateNumber)-$(Revision)</BuildIDNumber>
+    <PreviewVersion Condition=" '$(IsPreview)' == 'true' ">-preview-$(BuildIDNumber)</PreviewVersion>
+    <Version>$(Version)$(PreviewVersion)</Version>
+  </PropertyGroup>
 
 	<ItemGroup>
-		<None Include="$(MSBuildThisFileDirectory)..\README.md" Pack="true" PackagePath="\" />
+    <None Include="../../.assets/icon.png" Pack="true" PackagePath="icons" />
+		<None Include="README.md" Pack="true" PackagePath="" />
 	</ItemGroup>
 
 </Project>
