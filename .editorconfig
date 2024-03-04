@@ -1,4 +1,6 @@
 ﻿[*.cs]
 
+file_header_template = <copyright file="{fileName}" company="DarkLoop" author="Arturo Martinez">\n Copyright (c) DarkLoop. All rights reserved.\n</copyright>
+
 # CS0618: Type or member is obsolete
 dotnet_diagnostic.CS0618.severity = silent

@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>DarkLoop.Azure.Functions.Authorization.Abstractions</AssemblyName>
+    <RootNamespace>DarkLoop.Azure.Functions.Authorization</RootNamespace>
+    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <Version>0.0.1-preview</Version>
+    <Description>DarkLoop's Azure Functions authorization extension shared core functionality for InProc and Isolated modules.</Description>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+
+  <Import Project="..\..\.build\release.props" Condition=" '$(Configuration)' == 'Release' " />
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="3.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Metadata" Version="3.0.3" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="DarkLoop.Azure.Functions.Authorize" Key="$(PublicKey)" />
+    <InternalsVisibleTo Include="DarkLoop.Azure.Functions.Authorization.Isolated" Key="$(PublicKey)" />
+    <InternalsVisibleTo Include="Abstractions.Tests" Key="$(PublicKey)" />
+  </ItemGroup>
+
+</Project>
