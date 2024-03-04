@@ -17,6 +17,7 @@
     <PackageIconUrl>icons/icon.png</PackageIconUrl>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>../dl-sftwr-sn-key.snk</AssemblyOriginatorKeyFile>
+    <PublicKey>0024000004800000940000000602000000240000525341310004000001000100791e7f618a12452d7ced5310f6203d0d227f9d26b146555e7e67a1801695dcf7c552421620a662f54b072f7be1efa885c074d4b9c76a4d6d154721d1c3b1f39164cfaf9ebdf9b7672ff320c89c5a64c90e25330f90a12bf42a1c57b70523e785167dbbfb7a0fdc9eb8d15112f758b89bab51953b08cfb2218095bc45171c99c5</PublicKey>
     <IsPackable>true</IsPackable>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
