@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.32804.182
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D96FC724-6F6E-400E-BCA9-21A8FD44CA1C}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{051D16F8-54BB-482B-B2A9-47E2DA89E6DB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{1CED3FA2-C2EF-4A83-A9D6-B5193EF46B2C}"
@@ -12,12 +10,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{1CED3F
 		.build\release.props = .build\release.props
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DarkLoop.Azure.Functions.Authorize", "src\DarkLoop.Azure.Functions.Authorize\DarkLoop.Azure.Functions.Authorize.csproj", "{47791FF8-5FEA-42BC-8192-5A59D23ADE92}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DarkLoop.Azure.Functions.Authorize.Tests", "test\DarkLoop.Azure.Functions.Authorize.Tests\DarkLoop.Azure.Functions.Authorize.Tests.csproj", "{CB2B4A20-7882-4003-ADEF-E95F72DA3146}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".root", ".root", "{3A9A7517-71B4-429E-A91E-2DB7F695A363}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		.gitignore = .gitignore
 		LICENSE = LICENSE
 		README.md = README.md
@@ -25,15 +20,30 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".root", ".root", "{3A9A7517
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{53EC585B-CE9B-4E7D-B2E2-F7A9B6DA0FE7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DarkLoop.Azure.Functions.Authorize.SampleFunctions", "sample\DarkLoop.Azure.Functions.Authorize.SampleFunctions\DarkLoop.Azure.Functions.Authorize.SampleFunctions.csproj", "{9AB1B297-FA02-406C-A3E2-979A7CC5C706}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6C3D01C4-AFF0-4AE3-ACA1-FDCDF8FD6CE1}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Darkloop.Azure.Functions.Authorize.SampleFunctions.V4", "sample\Darkloop.Azure.Functions.Authorize.SampleFunctions.V4\Darkloop.Azure.Functions.Authorize.SampleFunctions.V4.csproj", "{0E97CAE1-D5E8-462D-B513-7EF2797C7D48}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleInProcFunctions.V4", "sample\SampleInProcFunctions.V4\SampleInProcFunctions.V4.csproj", "{0C7F5C24-C2B2-46DC-8DB7-B58BED3DDE43}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleIsolatedFunctions.V4", "sample\SampleIsolatedFunctions.V4\SampleIsolatedFunctions.V4.csproj", "{004B35A8-CD74-4E05-B601-9AFFD31427FF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abstractions.Tests", "test\Abstractions.Tests\Abstractions.Tests.csproj", "{D29BBE67-EE8E-4085-A004-F12E68FD7FB6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{284270FA-3689-46E6-B74C-249EA8981B78}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DarkLoop.Azure.Functions.Authorization.Abstractions", "src\abstractions\DarkLoop.Azure.Functions.Authorization.Abstractions.csproj", "{323DA8F9-DC74-491D-9B52-8F58ABAB2B47}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DarkLoop.Azure.Functions.Authorize", "src\in-proc\DarkLoop.Azure.Functions.Authorize.csproj", "{5766D189-64CA-4735-8378-5D5B529F8EB1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DarkLoop.Azure.Functions.Authorization.Isolated", "src\isolated\DarkLoop.Azure.Functions.Authorization.Isolated.csproj", "{05468E2C-BFCF-49A4-A083-8BEE26767FA5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".assets", ".assets", "{2A6C3077-8AC9-49AA-919E-88B0BF1BFECA}"
+	ProjectSection(SolutionItems) = preProject
+		.assets\icon.png = .assets\icon.png
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,31 +51,41 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{47791FF8-5FEA-42BC-8192-5A59D23ADE92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{47791FF8-5FEA-42BC-8192-5A59D23ADE92}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{47791FF8-5FEA-42BC-8192-5A59D23ADE92}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{47791FF8-5FEA-42BC-8192-5A59D23ADE92}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CB2B4A20-7882-4003-ADEF-E95F72DA3146}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CB2B4A20-7882-4003-ADEF-E95F72DA3146}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CB2B4A20-7882-4003-ADEF-E95F72DA3146}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CB2B4A20-7882-4003-ADEF-E95F72DA3146}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9AB1B297-FA02-406C-A3E2-979A7CC5C706}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9AB1B297-FA02-406C-A3E2-979A7CC5C706}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9AB1B297-FA02-406C-A3E2-979A7CC5C706}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9AB1B297-FA02-406C-A3E2-979A7CC5C706}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0E97CAE1-D5E8-462D-B513-7EF2797C7D48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0E97CAE1-D5E8-462D-B513-7EF2797C7D48}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0E97CAE1-D5E8-462D-B513-7EF2797C7D48}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0E97CAE1-D5E8-462D-B513-7EF2797C7D48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C7F5C24-C2B2-46DC-8DB7-B58BED3DDE43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C7F5C24-C2B2-46DC-8DB7-B58BED3DDE43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C7F5C24-C2B2-46DC-8DB7-B58BED3DDE43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C7F5C24-C2B2-46DC-8DB7-B58BED3DDE43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{004B35A8-CD74-4E05-B601-9AFFD31427FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{004B35A8-CD74-4E05-B601-9AFFD31427FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{004B35A8-CD74-4E05-B601-9AFFD31427FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{004B35A8-CD74-4E05-B601-9AFFD31427FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D29BBE67-EE8E-4085-A004-F12E68FD7FB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D29BBE67-EE8E-4085-A004-F12E68FD7FB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D29BBE67-EE8E-4085-A004-F12E68FD7FB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D29BBE67-EE8E-4085-A004-F12E68FD7FB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{323DA8F9-DC74-491D-9B52-8F58ABAB2B47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{323DA8F9-DC74-491D-9B52-8F58ABAB2B47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{323DA8F9-DC74-491D-9B52-8F58ABAB2B47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{323DA8F9-DC74-491D-9B52-8F58ABAB2B47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5766D189-64CA-4735-8378-5D5B529F8EB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5766D189-64CA-4735-8378-5D5B529F8EB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5766D189-64CA-4735-8378-5D5B529F8EB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5766D189-64CA-4735-8378-5D5B529F8EB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05468E2C-BFCF-49A4-A083-8BEE26767FA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05468E2C-BFCF-49A4-A083-8BEE26767FA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05468E2C-BFCF-49A4-A083-8BEE26767FA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05468E2C-BFCF-49A4-A083-8BEE26767FA5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{47791FF8-5FEA-42BC-8192-5A59D23ADE92} = {D96FC724-6F6E-400E-BCA9-21A8FD44CA1C}
-		{CB2B4A20-7882-4003-ADEF-E95F72DA3146} = {051D16F8-54BB-482B-B2A9-47E2DA89E6DB}
-		{9AB1B297-FA02-406C-A3E2-979A7CC5C706} = {53EC585B-CE9B-4E7D-B2E2-F7A9B6DA0FE7}
-		{0E97CAE1-D5E8-462D-B513-7EF2797C7D48} = {53EC585B-CE9B-4E7D-B2E2-F7A9B6DA0FE7}
+		{0C7F5C24-C2B2-46DC-8DB7-B58BED3DDE43} = {53EC585B-CE9B-4E7D-B2E2-F7A9B6DA0FE7}
+		{004B35A8-CD74-4E05-B601-9AFFD31427FF} = {53EC585B-CE9B-4E7D-B2E2-F7A9B6DA0FE7}
+		{D29BBE67-EE8E-4085-A004-F12E68FD7FB6} = {051D16F8-54BB-482B-B2A9-47E2DA89E6DB}
+		{323DA8F9-DC74-491D-9B52-8F58ABAB2B47} = {284270FA-3689-46E6-B74C-249EA8981B78}
+		{5766D189-64CA-4735-8378-5D5B529F8EB1} = {284270FA-3689-46E6-B74C-249EA8981B78}
+		{05468E2C-BFCF-49A4-A083-8BEE26767FA5} = {284270FA-3689-46E6-B74C-249EA8981B78}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {546E3A6C-060C-4630-BEEE-46A1F8715347}
