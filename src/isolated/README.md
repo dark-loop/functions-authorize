@@ -78,12 +78,3 @@ public class Functions
 
 Something really nice to notice is that for Functions in Isolated mode, the `HttpTriggerAttribute` default `AuthenticationLevel` is `Anonymous`, playing really well with the attribute.<br/>
 Also notice how the second function uses the `AuthorizeAttribute` attribute to apply a policy to the function. `FunctionAuthorizeAttribute` was left as part of the framework only to make it easier to migrate from In-Proc to Isolated, but they can be used interchangeably.
-
-### Releases
-[![Nuget](https://img.shields.io/nuget/v/DarkLoop.Azure.Functions.Authorize.svg)](https://www.nuget.org/packages/DarkLoop.Azure.Functions.Authorize)
-
-### Builds
-![master build status](https://dev.azure.com/darkloop/DarkLoop%20Core%20Library/_apis/build/status/Open%20Source/Functions%20Authorize%20-%20Pack?branchName=master)
-
-## Change log
-### 4.0.0 (preview)
