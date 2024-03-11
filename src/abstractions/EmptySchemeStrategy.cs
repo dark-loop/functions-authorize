@@ -10,16 +10,16 @@ namespace DarkLoop.Azure.Functions.Authorization
     public enum EmptySchemeStrategy
     {
         /// <summary>
-        /// Use the default authentication scheme specified in the application.
-        /// </summary>
-        UseDefaultScheme,
-
-        /// <summary>
         /// Use all authentication schemes specified in the application.
         /// </summary>
         /// <remarks>
         /// This does not apply to <see langword="WebJobsAuthLevel"/> and <see langword="ArmToken"/> within the In-Proc hosting model.
         /// </remarks>
-        UseAllSchemes
+        UseAllSchemes,
+
+        /// <summary>
+        /// Use the default authentication scheme specified in the application.
+        /// </summary>
+        UseDefaultScheme,
     }
 }

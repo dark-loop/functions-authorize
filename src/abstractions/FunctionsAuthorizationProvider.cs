@@ -144,14 +144,14 @@ namespace DarkLoop.Azure.Functions.Authorization
                         AuthenticationSchemes = ad.AuthenticationSchemes
                     }).ToList();
 
-                if (strategy is EmptySchemeStrategy.UseAllSchemes)
+                if (strategy is EmptySchemeStrategy.UseDefaultScheme)
                 {
-                    var schemes = (await _schemeProvider.GetRequestHandlerSchemesAsync()).Select(s => s.Name);
-                    copy[0].AuthenticationSchemes = string.Join(",", schemes.Except(__dismissedSchemes));
+                    copy[0].AuthenticationSchemes = defaultScheme!.Name;
                 }
                 else
                 {
-                    copy[0].AuthenticationSchemes = defaultScheme!.Name;
+                    var schemes = (await _schemeProvider.GetRequestHandlerSchemesAsync()).Select(s => s.Name);
+                    copy[0].AuthenticationSchemes = string.Join(",", schemes.Except(__dismissedSchemes));
                 }
 
                 return await AuthorizationPolicy.CombineAsync(policyProvider, copy);

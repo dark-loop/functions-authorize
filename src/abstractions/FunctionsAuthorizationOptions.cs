@@ -28,7 +28,7 @@ namespace DarkLoop.Azure.Functions.Authorization
         public bool WriteHttpStatusToResponse { get; set; }
 
         /// <summary>
-        /// Gets or sets the strategy to use when <see cref="IAuthorizeData.AuthenticationSchemes"/> is empty. Default value is <see cref="EmptySchemeStrategy.UseDefaultScheme"/>.
+        /// Gets or sets the strategy to use when <see cref="IAuthorizeData.AuthenticationSchemes"/> is empty. Default value is <see cref="EmptySchemeStrategy.UseAllSchemes"/>.
         /// </summary>
         public EmptySchemeStrategy EmptySchemeStrategy { get; set; }
     }
