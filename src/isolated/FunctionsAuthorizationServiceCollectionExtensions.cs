@@ -21,7 +21,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             Check.NotNull(services, nameof(services));
 
-            return services.AddAuthorizationCore();
+            return services.AddAuthorization();
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace Microsoft.Extensions.DependencyInjection
             Check.NotNull(services, nameof(services));
             Check.NotNull(configure, nameof(configure));
 
-            return services.AddAuthorizationCore(configure);
+            return services.AddAuthorization(configure);
         }
 
         /// <summary>

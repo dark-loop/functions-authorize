@@ -52,7 +52,7 @@ namespace DarkLoop.Azure.Functions.Authorize
                     var services = httpContext.RequestServices;
                     var authorizationExecutor = services.GetRequiredService<IFunctionsAuthorizationExecutor>();
                     
-                    await authorizationExecutor.ExecuteAuthorizationAsync(executingContext);
+                    await authorizationExecutor.ExecuteAuthorizationAsync(executingContext, httpContext);
                 }
             }
         }

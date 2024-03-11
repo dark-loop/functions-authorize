@@ -5,7 +5,10 @@
 using System.Net;
 using System.Threading.Tasks;
 using DarkLoop.Azure.Functions.Authorization.Internal;
+using DarkLoop.Azure.Functions.Authorization.Properties;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
@@ -18,6 +21,7 @@ namespace DarkLoop.Azure.Functions.Authorization
     {
         private readonly IFunctionsAuthorizationProvider _authorizationProvider;
         private readonly IFunctionsAuthorizationResultHandler _authorizationHandler;
+        private readonly IAuthorizationPolicyProvider _policyProvider;
         private readonly IPolicyEvaluator _policyEvaluator;
         private readonly IOptionsMonitor<FunctionsAuthorizationOptions> _configOptions;
         private readonly FunctionsAuthorizationOptions _options;
@@ -32,6 +36,7 @@ namespace DarkLoop.Azure.Functions.Authorization
         public FunctionsAuthorizationExecutor(
             IFunctionsAuthorizationProvider authorizationProvider,
             IFunctionsAuthorizationResultHandler authorizationHandler,
+            IAuthorizationPolicyProvider policyProvider,
             IPolicyEvaluator policyEvaluator,
             IOptionsMonitor<FunctionsAuthorizationOptions> configOptions,
             IOptions<FunctionsAuthorizationOptions> options,
@@ -39,12 +44,14 @@ namespace DarkLoop.Azure.Functions.Authorization
         {
             Check.NotNull(authorizationProvider, nameof(authorizationProvider));
             Check.NotNull(authorizationHandler, nameof(authorizationHandler));
+            Check.NotNull(policyProvider, nameof(policyProvider));
             Check.NotNull(policyEvaluator, nameof(policyEvaluator));
             Check.NotNull(configOptions, nameof(configOptions));
             Check.NotNull(logger, nameof(logger));
 
             _authorizationProvider = authorizationProvider;
             _authorizationHandler = authorizationHandler;
+            _policyProvider = policyProvider;
             _policyEvaluator = policyEvaluator;
             _configOptions = configOptions;
             _options = options.Value;
@@ -52,24 +59,20 @@ namespace DarkLoop.Azure.Functions.Authorization
         }
 
         /// <inheritdoc />
-        public async Task ExecuteAuthorizationAsync(FunctionExecutingContext context)
+        public async Task ExecuteAuthorizationAsync(FunctionExecutingContext context, HttpContext httpContext)
         {
             Check.NotNull(context, nameof(context));
 
-            var httpContext = context.GetHttpContext()!;
-
             if (this._configOptions.CurrentValue.AuthorizationDisabled)
             {
-                _logger.LogWarning(
-                    $"Authorization through FunctionAuthorizeAttribute is disabled at the application level. Skipping authorization for {httpContext.Request.GetDisplayUrl()}.");
+                _logger.LogWarning(Strings.DisabledAuthorization, httpContext.Request.GetDisplayUrl());
 
                 return;
             }
 
-            var filter = await _authorizationProvider.GetAuthorizationAsync(context.FunctionName);
+            var filter = await _authorizationProvider.GetAuthorizationAsync(context.FunctionName, _policyProvider);
 
-            if (httpContext.Items.ContainsKey(Constants.AuthInvokedKey) ||
-                filter?.Policy is null)
+            if (filter.Policy is null)
             {
                 return;
             }
@@ -88,6 +91,9 @@ namespace DarkLoop.Azure.Functions.Authorization
 
             await _authorizationHandler.HandleResultAsync(authContext, httpContext);
 
+            // As this is only executed through an invocation filter,
+            // we need to throw an exception to stop the function execution.
+            // By now the caller has already received an unauthorized or forbidden response.
             if (!authorizeResult.Succeeded)
             {
                 if (authorizeResult.Challenged)

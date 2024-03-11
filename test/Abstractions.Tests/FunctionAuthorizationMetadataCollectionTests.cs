@@ -89,7 +89,7 @@ namespace Abstractions.Tests
                 .AllowAnonymousAccess();
 
             var single = collection
-                .GetMetadata("TestFunction", this.GetType());
+                .GetMetadata("TestFunction");
 
             // Assert
             Assert.AreNotSame(metadata1, metadata2);
@@ -114,11 +114,14 @@ namespace Abstractions.Tests
                 .AllowAnonymousAccess();
 
             var metadata2 = collection
-                .GetMetadata("TestFunction", this.GetType());
+                .Add("TestFunction", this.GetType());
+
+            var metadata = collection
+                .GetMetadata("TestFunction");
 
             // Assert
-            Assert.AreNotSame(metadata1, metadata2);
-            Assert.IsTrue(metadata2.AllowsAnonymousAccess);
+            Assert.AreNotSame(metadata1, metadata);
+            Assert.IsTrue(metadata.AllowsAnonymousAccess);
         }
 
         [TestMethod("MetadataCollection: should return metadata for unregistered function")]
@@ -128,7 +131,7 @@ namespace Abstractions.Tests
             var collection = new FunctionAuthorizationMetadataCollection();
 
             // Act
-            var metadata = collection.GetMetadata("TestFunction", this.GetType());
+            var metadata = collection.GetMetadata("TestFunction");
 
             // Assert
             Assert.IsNotNull(metadata);

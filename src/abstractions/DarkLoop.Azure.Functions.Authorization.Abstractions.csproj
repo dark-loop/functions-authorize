@@ -37,6 +37,23 @@
     <InternalsVisibleTo Include="DarkLoop.Azure.Functions.Authorize" Key="$(PublicKey)" />
     <InternalsVisibleTo Include="DarkLoop.Azure.Functions.Authorization.Isolated" Key="$(PublicKey)" />
     <InternalsVisibleTo Include="Abstractions.Tests" Key="$(PublicKey)" />
+    <InternalsVisibleTo Include="Isolated.Tests" Key="$(PublicKey)" />
+    <InternalsVisibleTo Include="InProc.Tests" Key="$(PublicKey)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Messages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Messages.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Messages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

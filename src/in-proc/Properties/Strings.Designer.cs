@@ -61,6 +61,15 @@ namespace DarkLoop.Azure.Functions.Authorization.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Authorization through FunctionAuthorizeAttribute is disabled at the application level. Skipping authorization for {0}..
+        /// </summary>
+        internal static string DisabledAuthorization {
+            get {
+                return ResourceManager.GetString("DisabledAuthorization", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Azure.Functions.Cli.Actions.HostActions.WebHost.Security.CliAuthenticationHandler`1.
         /// </summary>
         internal static string Func_ClieAuthHandler {

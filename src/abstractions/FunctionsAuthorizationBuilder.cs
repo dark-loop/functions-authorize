@@ -4,6 +4,9 @@
 
 namespace DarkLoop.Azure.Functions.Authorization
 {
+    /// <summary>
+    /// Placeholder class for future functionality.
+    /// </summary>
     public class FunctionsAuthorizationBuilder
     {
     }

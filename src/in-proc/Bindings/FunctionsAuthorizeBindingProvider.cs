@@ -51,7 +51,7 @@ namespace DarkLoop.Azure.Functions.Authorization.Bindings
             var declaringType = method.DeclaringType!;
             var nameAttr = method.GetCustomAttribute<FunctionNameAttribute>()!;
 
-            _options.RegisterFunctionAuthorizationMetadata<FunctionAuthorizeAttribute>(
+            _options.RegisterFunctionAuthorizationAttributesMetadata<FunctionAuthorizeAttribute>(
                 nameAttr.Name, declaringType, method);
         }
     }

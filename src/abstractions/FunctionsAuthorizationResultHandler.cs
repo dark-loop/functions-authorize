@@ -49,7 +49,7 @@ namespace DarkLoop.Azure.Functions.Authorization
                 {
                     await onSuccess(context.UnderlyingContext);
                 }
-
+                
                 return;
             }
 

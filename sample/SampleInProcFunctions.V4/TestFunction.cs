@@ -1,4 +1,7 @@
-using System.IO;
+// <copyright file="TestFunction.cs" company="DarkLoop" author="Arturo Martinez">
+//  Copyright (c) DarkLoop. All rights reserved.
+// </copyright>
+
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,9 +12,8 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
-namespace DarkLoop.Azure.Functions.Authorize.SampleFunctions
+namespace DarkLoop.Azure.Functions.Authorize.SampleFunctions.V4
 {
     public static class TestFunction
     {
@@ -35,4 +37,3 @@ namespace DarkLoop.Azure.Functions.Authorize.SampleFunctions
         }
     }
 }
-

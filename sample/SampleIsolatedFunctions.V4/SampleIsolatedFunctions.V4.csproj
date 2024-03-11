@@ -20,14 +20,11 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\isolated\DarkLoop.Azure.Functions.Authorization.Isolated.csproj" />
+    <ProjectReference Include="..\..\test\Common.Tests\Common.Tests.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="host.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="local.settings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>

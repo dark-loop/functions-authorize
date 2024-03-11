@@ -5,13 +5,23 @@
 		<UserSecretsId>51dc0b9d-8e74-45ec-aebc-1d3d6934faf5</UserSecretsId>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <_FunctionsSkipCleanOutput>true</_FunctionsSkipCleanOutput>
+  </PropertyGroup>
+
 	<ItemGroup>
     <PackageReference Include="Microsoft.Azure.Functions.Extensions" Version="1.1.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
 		<PackageReference Include="Microsoft.NET.Sdk.Functions" Version="4.0.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.4.0">
+      <PrivateAssets>all</PrivateAssets>
+      <CopyLocal>true</CopyLocal>
+		</PackageReference>
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\..\src\in-proc\DarkLoop.Azure.Functions.Authorize.csproj" />
+	  <ProjectReference Include="..\..\test\Common.Tests\Common.Tests.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Update="host.json">

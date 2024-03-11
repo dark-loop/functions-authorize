@@ -4,12 +4,14 @@
 
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Authorization;
 
 namespace DarkLoop.Azure.Functions.Authorization
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
     [DebuggerDisplay("{ToString(),nq}")]
+    [ExcludeFromCodeCoverage]
     public class FunctionAuthorizeAttribute : AuthorizeAttribute, IAuthorizeData
     {
         /// <summary>

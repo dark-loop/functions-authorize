@@ -17,8 +17,13 @@ namespace DarkLoop.Azure.Functions.Authorization
     internal sealed class FunctionAuthorizationMetadataCollection
     {
         private readonly object _syncLock = new();
+        internal readonly FunctionAuthorizationTypeMap _typeMap = new();
         private readonly IDictionary<int, FunctionAuthorizationMetadata> _items =
             new Dictionary<int, FunctionAuthorizationMetadata>();
+
+        /// <summary>
+        /// Gets the number of authorization metadata items in the collection.
+        internal int Count => _items.Count;
 
         /// <summary>
         /// Adds a rule for all functions on the declaring type.
@@ -36,14 +41,47 @@ namespace DarkLoop.Azure.Functions.Authorization
         /// </summary>
         /// <param name="functionName">The name of the function.</param>
         /// <param name="declaringType">The type declaring the function method.</param>
-        
+
         /// <returns>An instance of <see cref="FunctionAuthorizationMetadata"/></returns>
         /// <exception cref="InvalidOperationException">
         /// When a rule already exists and defines a different value than the one specified in <paramref name="allowAnonymous"/>
         /// </exception>
         internal FunctionAuthorizationMetadata Add(string functionName, Type declaringType)
         {
+            this.RegisterFunctionDeclaringType(functionName, declaringType);
+            
             return this.GetOrAdd(functionName, declaringType, out _);
+        }
+
+        internal FunctionAuthorizationMetadata GetMetadata(string functionName)
+        {
+            var declaringType = GetFunctionDeclaringType(functionName);
+
+            if (declaringType is null)
+            {
+                // TODO: Log warning
+                return FunctionAuthorizationMetadata.Empty;
+            }
+
+            return GetMetadata(functionName, declaringType);
+        }
+
+
+        internal bool IsFunctionRegistered(string functionName)
+        {
+            return _typeMap.IsFunctionRegistered(functionName);
+        }
+
+        internal int GetFunctionAuthorizationId(string functionName)
+        {
+            var declaringType = GetFunctionDeclaringType(functionName);
+
+            return FunctionAuthorizationMetadata.GetId(functionName, declaringType);
+        }
+
+        private bool RegisterFunctionDeclaringType(string functionName, Type declaringType)
+        {
+            return _typeMap.AddFunctionType(functionName, declaringType);
         }
 
         /// <summary>
@@ -52,7 +90,7 @@ namespace DarkLoop.Azure.Functions.Authorization
         /// <param name="functionName">The name of the function.</param>
         /// <param name="declaringType">The type declaring the function.</param>
         /// <returns>An instance of <see cref="FunctionAuthorizationMetadata"/></returns>
-        internal FunctionAuthorizationMetadata GetMetadata(string functionName, Type declaringType)
+        private FunctionAuthorizationMetadata GetMetadata(string functionName, Type declaringType)
         {
             Check.NotNullOrWhiteSpace(functionName, nameof(functionName));
             Check.NotNull(declaringType, nameof(declaringType));
@@ -68,10 +106,15 @@ namespace DarkLoop.Azure.Functions.Authorization
 
             var merged = new FunctionAuthorizationMetadata(functionName, declaringType)
             {
-                AllowsAnonymousAccess = functionRule?.AllowsAnonymousAccess ?? (typeRule?.AllowsAnonymousAccess ?? false)
+                AllowsAnonymousAccess = (typeRule?.AllowsAnonymousAccess ?? false) || (functionRule?.AllowsAnonymousAccess ?? false)
             };
 
             return merged.AddAuthorizeData(typeAuthData.Concat(functionAuthData));
+        }
+
+        private Type? GetFunctionDeclaringType(string functionName)
+        {
+            return _typeMap[functionName];
         }
 
         private FunctionAuthorizationMetadata GetOrAdd(string? functionName, Type declaringType, out bool existing)
@@ -80,27 +123,25 @@ namespace DarkLoop.Azure.Functions.Authorization
 
             existing = false;
 
-            if (!_items.TryGetValue(key, out var metadata))
-            {
-                lock (_syncLock)
-                {
-                    if (!_items.TryGetValue(key, out metadata))
-                    {
-                        metadata = string.IsNullOrWhiteSpace(functionName)
-                            ? new FunctionAuthorizationMetadata(declaringType)
-                            : new FunctionAuthorizationMetadata(functionName, declaringType);
-
-                        _items.Add(key, metadata);
-                    }
-                    else
-                    {
-                        existing = true;
-                    }
-                }
-            }
-            else
+            if (_items.TryGetValue(key, out var metadata))
             {
                 existing = true;
+                return metadata;
+            }
+
+            lock (_syncLock)
+            {
+                if (_items.TryGetValue(key, out metadata))
+                {
+                    existing = true;
+                    return metadata;
+                }
+
+                metadata = string.IsNullOrWhiteSpace(functionName)
+                    ? new FunctionAuthorizationMetadata(declaringType)
+                    : new FunctionAuthorizationMetadata(functionName, declaringType);
+
+                _items.Add(key, metadata);
             }
 
             return metadata;

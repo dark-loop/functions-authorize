@@ -1,3 +1,9 @@
+// <copyright file="TestFunction.cs" company="DarkLoop" author="Arturo Martinez">
+//  Copyright (c) DarkLoop. All rights reserved.
+// </copyright>
+
+using System.Reflection;
+using System.Text;
 using DarkLoop.Azure.Functions.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -6,22 +12,21 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System.Reflection;
-using System.Text;
 
 namespace SampleIsolatedFunctions.V4
 {
-    [FunctionAuthorize]
-    public class Function1
+    [FunctionAuthorize(AuthenticationSchemes = "Bearer")]
+    public class TestFunction
     {
-        private readonly ILogger<Function1> _logger;
+        private readonly ILogger<TestFunction> _logger;
 
-        public Function1(ILogger<Function1> logger)
+        public TestFunction(ILogger<TestFunction> logger)
         {
             _logger = logger;
         }
 
-        [Function("Function1")]
+        [Function("TestFunction")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Run([HttpTrigger("get", "post")] HttpRequest req)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
@@ -41,7 +46,6 @@ namespace SampleIsolatedFunctions.V4
             sb.AppendLine(Assembly.GetEntryAssembly()!.FullName);
 
             return new OkObjectResult(sb.ToString());
-
         }
     }
 }

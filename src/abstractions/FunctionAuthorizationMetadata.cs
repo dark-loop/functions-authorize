@@ -1,27 +1,26 @@
-﻿using DarkLoop.Azure.Functions.Authorization.Internal;
-using Microsoft.AspNetCore.Authorization;
+﻿// <copyright file="FunctionAuthorizationMetadata.cs" company="DarkLoop" author="Arturo Martinez">
+//  Copyright (c) DarkLoop. All rights reserved.
+// </copyright>
+
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using DarkLoop.Azure.Functions.Authorization.Internal;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DarkLoop.Azure.Functions.Authorization
 {
-    public sealed class FunctionAuthorizationMetadata
+    public class FunctionAuthorizationMetadata
     {
         private readonly int _key;
-        private readonly Type? _functionType;
         private readonly string? _functionName;
+        private readonly Type? _declaringType;
         private readonly List<IAuthorizeData> _authData;
 
         /// <summary>
         /// Default authorization rule.
         /// </summary>
-        internal readonly static FunctionAuthorizationMetadata Empty = new() { AllowsAnonymousAccess = true };
+        public readonly static FunctionAuthorizationMetadata Empty = new() { AllowsAnonymousAccess = false };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FunctionAuthorizationMetadata"/> class.
@@ -38,9 +37,9 @@ namespace DarkLoop.Azure.Functions.Authorization
             Check.NotNullOrWhiteSpace(functionName, nameof(functionName), "The name of the function must be specified.");
             Check.NotNull(declaringType, nameof(declaringType), "The declaring type of the function must be specified.");
 
-            _functionName = functionName;
-            _functionType = declaringType;
             _key = GetId(functionName, declaringType);
+            _functionName = functionName;
+            _declaringType = declaringType;
         }
 
         /// <summary>
@@ -51,8 +50,8 @@ namespace DarkLoop.Azure.Functions.Authorization
         {
             Check.NotNull(declaringType, nameof(declaringType), "The declaring type of the function must be specified.");
 
-            _functionType = declaringType;
             _key = GetId(null, declaringType);
+            _declaringType = declaringType;
         }
 
         /// <summary>
@@ -68,7 +67,8 @@ namespace DarkLoop.Azure.Functions.Authorization
         /// <summary>
         /// Gets the name of the type declaring the function method.
         /// </summary>
-        public Type DeclaringType => _functionType!;
+        /// <remarks>The returned value is never <see langword="null"/>. Only for <see cref="Empty"/></remarks>
+        public virtual Type? DeclaringType => _declaringType;
 
         /// <summary>
         /// Gets a value indicating whether the function allows anonymous access.

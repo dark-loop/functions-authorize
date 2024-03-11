@@ -5,7 +5,6 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using DarkLoop.Azure.Functions.Authorization.Internal;
 using Microsoft.AspNetCore.Authorization;
 
@@ -42,57 +41,28 @@ namespace DarkLoop.Azure.Functions.Authorization
             Check.NotNullOrWhiteSpace(functionName, nameof(functionName));
             Check.NotNull(declaringType, nameof(declaringType));
 
-            options.RegisterFunctionDeclaringType(functionName, declaringType);
-
             return options.AuthorizationMetadata.Add(functionName, declaringType);
         }
 
         /// <inheritdoc cref="FunctionAuthorizationTypeMap.IsFunctionRegistered"/>
         internal static bool IsFunctionRegistered(this FunctionsAuthorizationOptions options, string functionName)
         {
-            return options.TypeMap.IsFunctionRegistered(functionName);
+            return options.AuthorizationMetadata.IsFunctionRegistered(functionName);
         }
 
         /// <summary>
-        /// Gets the authorization metadata for the specified function.<br/>
-        /// This method is intended to retrieve metadata at authorization time (not configuration).
+        /// Registers the authorization metadata for the function extracted from attribute.
         /// </summary>
-        /// <param name="functionName">The name of the function</param>
-        /// <returns></returns>
-        internal static FunctionAuthorizationMetadata GetMetadata(
-            this FunctionsAuthorizationOptions options, string functionName)
-        {
-            Check.NotNullOrWhiteSpace(functionName, nameof(functionName));
-
-            var declaringType = options.GetFunctionDeclaringType(functionName);
-
-            if (declaringType is null)
-            {
-                return FunctionAuthorizationMetadata.Empty;
-            }
-
-            return options.AuthorizationMetadata.GetMetadata(functionName, declaringType);
-        }
-
-        internal static Type? GetFunctionDeclaringType(
-            this FunctionsAuthorizationOptions options, string functionName)
-        {
-            Check.NotNullOrWhiteSpace(functionName, nameof(functionName));
-
-            return options.TypeMap[functionName];
-        }
-
-        private static bool RegisterFunctionDeclaringType(
-            this FunctionsAuthorizationOptions options, string functionName, Type declaringType)
-        {
-            return options.TypeMap.AddFunctionType(functionName, declaringType);
-        }
-
-        internal static void RegisterFunctionAuthorizationMetadata<TAuthAttribute>(
+        /// <typeparam name="TAuthAttribute">The type of authorization attribute to lookup.</typeparam>
+        /// <param name="options">The current options object</param>
+        /// <param name="functionName">The name of the function.</param>
+        /// <param name="declaringType">The type declaring the function.</param>
+        /// <param name="functionMethod">The entry point method for the function.</param>
+        internal static void RegisterFunctionAuthorizationAttributesMetadata<TAuthAttribute>(
             this FunctionsAuthorizationOptions options, string functionName, Type declaringType, MethodInfo functionMethod)
             where TAuthAttribute : Attribute, IAuthorizeData
         {
-            var typeRule = options
+            var typeMetadata = options
                 .SetTypeAuthorizationInfo(declaringType, out var typeAlreadyRegistered);
 
             if (!typeAlreadyRegistered)
@@ -102,28 +72,28 @@ namespace DarkLoop.Azure.Functions.Authorization
 
                 if (classAuthAttributes.Length > 0)
                 {
-                    typeRule.AddAuthorizeData(classAuthAttributes);
+                    typeMetadata.AddAuthorizeData(classAuthAttributes);
                 }
 
                 if (classAllowAnonymous is not null)
                 {
-                    typeRule.AllowAnonymousAccess();
+                    typeMetadata.AllowAnonymousAccess();
                 }
             }
 
             var methodAuthAttributes = functionMethod.GetCustomAttributes<TAuthAttribute>().ToArray();
             var methodAllowAnonymous = functionMethod.GetCustomAttribute<AllowAnonymousAttribute>();
-            var methodRule = options
+            var methodMetadata = options
                 .SetFunctionAuthorizationInfo(functionName, declaringType);
 
             if (methodAuthAttributes.Length > 0)
             {
-                methodRule.AddAuthorizeData(methodAuthAttributes);
+                methodMetadata.AddAuthorizeData(methodAuthAttributes);
             }
 
             if (methodAllowAnonymous is not null)
             {
-                methodRule.AllowAnonymousAccess();
+                methodMetadata.AllowAnonymousAccess();
             }
         }
     }

@@ -2,13 +2,14 @@
 //  Copyright (c) DarkLoop. All rights reserved.
 // </copyright>
 
+using Common.Tests;
 using DarkLoop.Azure.Functions.Authorization;
 using DarkLoop.Azure.Functions.Authorize.SampleFunctions.V4;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 
 [assembly: FunctionsStartup(typeof(Startup))]
 
@@ -28,32 +29,21 @@ namespace DarkLoop.Azure.Functions.Authorize.SampleFunctions.V4
                 })
                 .AddJwtBearer(options =>
                 {
-                    options.Authority = $"{Configuration["AzureAD:Instance"]}{Configuration["AzureAD:TenantId"]}";
-                    options.Audience = Configuration["AzureAD:ApiIdUrl"];
-                    options.Challenge = $"Bearer realm=\"\", authorization_uri=\"{Configuration["AzureAD:Instance"]}{Configuration["AzureAD:TenantId"]}/oauth2/authorize\", client_id=\"{Configuration["AzureAD:ApiClientId"]}\"";
+                    // this line is here to bypass the token validation
+                    // and test the functionality of this library.
+                    // you can create a dummy token by executing the GetTestToken function in HelperFunctions.cs
+                    options.SecurityTokenValidators.Add(new TestTokenValidator());
 
-                    options.Events = new JwtBearerEvents
+                    // this is what you should look for in a real-world scenario
+                    // comment this if you cloned this repository and want to test the library
+                    options.Authority = "https://login.microsoftonline.com/<your-tenant>";
+                    options.Audience = "your-audience";
+                    options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        OnAuthenticationFailed = async x =>
-                        {
-                            var body = "Unauthorized request";
-                            var response = x.Response;
-                            response.StatusCode = 401;
-                            response.ContentType = "text/plain";
-                            response.ContentLength = body.Length;
-                            await response.WriteAsync(body);
-                            await response.Body.FlushAsync();
-                        },
-                        OnChallenge = async x =>
-                        {
-                            // un-commenting the following lines would override what the internals do to send an unauthorized response
-                            var response = x.Response;
-                            response.StatusCode = 401;
-                            response.ContentType = "text/plain";
-                            response.ContentLength = 5;
-                            await response.WriteAsync("No go");
-                            await response.Body.FlushAsync();
-                        }
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true
                     };
                 }, true);
 
