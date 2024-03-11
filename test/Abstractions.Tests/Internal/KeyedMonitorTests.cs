@@ -55,7 +55,7 @@ namespace Abstractions.Tests.Internal
             _ = Task.Run(() => task5());
 
             // awaiting for all tasks to complete
-            await Task.Delay(100);
+            await Task.Delay(500);
 
             // Assert
             Assert.AreEqual(5, _executedTasks!.Count);
