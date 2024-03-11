@@ -29,7 +29,6 @@ namespace InProc.Tests
         [TestInitialize]
         public void Initialize()
         {
-            Host.EnsureSdkHost();
             var config = new ConfigurationBuilder().Build();
             var services = new ServiceCollection() as IServiceCollection;
             services
