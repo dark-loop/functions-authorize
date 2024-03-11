@@ -70,7 +70,7 @@ namespace DarkLoop.Azure.Functions.Authorization.Metadata
 
             var declaringType = method.DeclaringType!;
 
-            _options.RegisterFunctionAuthorizationMetadata<AuthorizeAttribute>(functionName, declaringType, method);
+            _options.RegisterFunctionAuthorizationAttributesMetadata<AuthorizeAttribute>(functionName, declaringType, method);
         }
     }
 }

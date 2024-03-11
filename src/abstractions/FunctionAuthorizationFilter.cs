@@ -18,7 +18,7 @@ namespace DarkLoop.Azure.Functions.Authorization
         /// </summary>
         /// <param name="authorizationPolicy">The <see cref="AuthorizationPolicy"/> to be used for the function.</param>
         /// <param name="allowAnonymous">A value indicating whether the function allows anonymous access.</param>
-        internal FunctionAuthorizationFilter(AuthorizationPolicy? authorizationPolicy, bool allowAnonymous = false)
+        public FunctionAuthorizationFilter(AuthorizationPolicy? authorizationPolicy, bool allowAnonymous = false)
         {
             Policy = authorizationPolicy;
             AllowAnonymous = allowAnonymous;

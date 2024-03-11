@@ -3,7 +3,7 @@
 // </copyright>
 
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization.Policy;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.WebJobs.Host;
 
 namespace DarkLoop.Azure.Functions.Authorization
@@ -17,6 +17,6 @@ namespace DarkLoop.Azure.Functions.Authorization
         /// Executes the authorization for a given function.
         /// </summary>
         /// <param name="context">The function authorization context.</param>
-        Task ExecuteAuthorizationAsync(FunctionExecutingContext context);
+        Task ExecuteAuthorizationAsync(FunctionExecutingContext context, HttpContext httpContext);
     }
 }

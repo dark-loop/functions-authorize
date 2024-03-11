@@ -12,7 +12,7 @@ namespace DarkLoop.Azure.Functions.Authorization.Utils
 {
     internal class LocalHostUtils : HostUtils
     {
-        private static readonly Assembly __funcAssembly;
+        private static readonly Assembly? __funcAssembly;
         private static readonly MethodInfo? __addSchemeMethod;
 
         // The following types are used to interact with the Azure Functions runtime.
@@ -27,7 +27,16 @@ namespace DarkLoop.Azure.Functions.Authorization.Utils
 
         static LocalHostUtils()
         {
-            __funcAssembly = Assembly.Load("func");
+            try
+            {
+                // this is problematic for testing as the core tools are not loaded and there's not package available
+                // enclosing in try/catch to avoid breaking the tests
+                __funcAssembly = Assembly.Load("func");
+            }
+            catch
+            {
+                // ignored
+            }
 
             if (IsLocalDevelopment)
             {
@@ -38,7 +47,7 @@ namespace DarkLoop.Azure.Functions.Authorization.Utils
                 __jwtSecurityExtensionsType = WebJobsHostAssembly.GetType(Strings.WJH_JWTExtensions);
                 __authLevelOptionsType = WebJobsHostAssembly.GetType(Strings.WJH_AuthLevelOptions);
                 __armTokenOptionsType = WebJobsHostAssembly.GetType(Strings.WJH_ArmAuthOptions);
-                __cliAuthHandlerType = __funcAssembly.GetType(Strings.Func_ClieAuthHandler);
+                __cliAuthHandlerType = __funcAssembly?.GetType(Strings.Func_ClieAuthHandler);
 
                 __addBuiltInJwt = BuildAddBuiltInJwtFunc();
                 __addAuthLevel = BuildAuthLevelFunc();

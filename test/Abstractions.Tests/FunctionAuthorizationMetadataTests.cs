@@ -32,5 +32,20 @@ namespace Abstractions.Tests
             // Assert
             Assert.AreEqual(3, metadata.AuthorizationData.Count);
         }
+
+        [TestMethod("Metadata: GetId for Empty values and GetId with null params should get same result")]
+        public void Metadata_GetIdForEmptyValuesAndGetIdWithNullParamsShouldGetSameResult()
+        {
+            // Arrange
+            var empty = FunctionAuthorizationMetadata.Empty;
+            
+            // Act
+            var result1 = FunctionAuthorizationMetadata.GetId(null, null);
+            var result2 = FunctionAuthorizationMetadata.GetId(empty.FunctionName, empty.DeclaringType);
+
+            // Assert
+            Assert.AreEqual(result1, result2);
+        }
+
     }
 }

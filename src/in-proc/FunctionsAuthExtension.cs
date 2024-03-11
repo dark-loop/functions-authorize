@@ -10,8 +10,6 @@ namespace DarkLoop.Azure.Functions.Authorization
     [Extension("FunctionsAuthorize")]
     class FunctionsAuthExtension : IExtensionConfigProvider
     {
-        public void Initialize(ExtensionConfigContext context)
-        {
-        }
+        public void Initialize(ExtensionConfigContext context) { }
     }
 }
