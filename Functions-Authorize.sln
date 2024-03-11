@@ -15,6 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".root", ".root", "{3A9A7517
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
 		LICENSE = LICENSE
+		NuGet.Config = NuGet.Config
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -45,11 +46,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".assets", ".assets", "{2A6C
 		.assets\icon.png = .assets\icon.png
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Tests", "test\Common.Tests\Common.Tests.csproj", "{E7143566-8DA8-4D2F-AA23-7FB0BADE229F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Tests", "test\Common.Tests\Common.Tests.csproj", "{E7143566-8DA8-4D2F-AA23-7FB0BADE229F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Isolated.Tests", "test\Isolated.Tests\Isolated.Tests.csproj", "{4E74E715-7549-46C4-AF0F-464C24FA00E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Isolated.Tests", "test\Isolated.Tests\Isolated.Tests.csproj", "{4E74E715-7549-46C4-AF0F-464C24FA00E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InProc.Tests", "test\InProc.Tests\InProc.Tests.csproj", "{3E24DA59-3292-430E-B784-5FC13CAEDA5E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InProc.Tests", "test\InProc.Tests\InProc.Tests.csproj", "{3E24DA59-3292-430E-B784-5FC13CAEDA5E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

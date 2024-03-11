@@ -29,14 +29,18 @@ namespace InProc.Tests
         [TestInitialize]
         public void Initialize()
         {
-            Host.EnsureSdkHost();
             var config = new ConfigurationBuilder().Build();
             var services = new ServiceCollection() as IServiceCollection;
             services
                 .AddSingleton<IConfiguration>(config)
                 .AddLogging()
-                .AddFunctionsAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer();
+                .AddFunctionsAuthentication(options =>
+                {
+                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(delegate { }, true);
 
             services
                 .AddFunctionsAuthorization()

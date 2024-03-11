@@ -37,7 +37,7 @@ namespace Microsoft.Extensions.DependencyInjection
         }
 
         private static FunctionsAuthenticationBuilder AddFunctionsAuthentication(
-                   this IServiceCollection services, string? defaultScheme, Action<AuthenticationOptions>? configure)
+            this IServiceCollection services, string? defaultScheme, Action<AuthenticationOptions>? configure)
         {
             var authBuilder = new FunctionsAuthenticationBuilder(services);
 
@@ -61,13 +61,9 @@ namespace Microsoft.Extensions.DependencyInjection
                 HostUtils.AddFunctionsBuiltInAuthentication(services);
             }
 
-            if (string.IsNullOrWhiteSpace(defaultScheme) && configure is not null)
+            if (configure is not null)
             {
-                services.AddSingleton<IConfigureOptions<AuthenticationOptions>>(provider =>
-                    new ConfigureOptions<AuthenticationOptions>(options =>
-                    {
-                        configure(options);
-                    }));
+                services.Configure(configure);
             }
 
             return authBuilder;
