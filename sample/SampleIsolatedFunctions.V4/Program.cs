@@ -35,23 +35,27 @@ var host = new HostBuilder()
                 // this line is here to bypass the token validation
                 // and test the functionality of this library.
                 // you can create a dummy token by executing the GetTestToken function in HelperFunctions.cs
+                // THE FOLLOWING LINE SHOULD BE REMOVED IN A REAL-WORLD SCENARIO
                 options.SecurityTokenValidators.Add(new TestTokenValidator());
 
                 // this is what you should look for in a real-world scenario
-                // comment this if you cloned this repository and want to test the library
-                options.Authority = "https://login.microsoftonline.com";
-                options.Audience = "your-audience";
+                // comment the lines if you cloned this repository and want to test the library
+                options.Authority = "https://login.microsoftonline.com/<your-tenant>";
+                options.Audience = "<your-audience>";
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true
+                    ValidateIssuerSigningKey = true,
                 };
             });
 
         services
-            .AddFunctionsAuthorization();
+            .AddFunctionsAuthorization(options =>
+            {
+                // Add your policies here
+            });
     })
     .Build();
 

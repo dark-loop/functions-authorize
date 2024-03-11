@@ -2,7 +2,6 @@
 //  Copyright (c) DarkLoop. All rights reserved.
 // </copyright>
 
-using System.Reflection;
 using System.Text;
 using DarkLoop.Azure.Functions.Authorization;
 using Microsoft.AspNetCore.Authentication;
@@ -35,15 +34,18 @@ namespace SampleIsolatedFunctions.V4
             var schProvider = provider.GetService<IAuthenticationSchemeProvider>();
 
             var sb = new StringBuilder();
+            sb.AppendLine("Authentication schemes:");
 
             if (schProvider is not null)
             {
                 foreach (var scheme in await schProvider.GetAllSchemesAsync())
-                    sb.AppendLine($"{scheme.Name} -> {scheme.HandlerType}");
+                    sb.AppendLine($"  {scheme.Name} -> {scheme.HandlerType}");
             }
 
             sb.AppendLine();
-            sb.AppendLine(Assembly.GetEntryAssembly()!.FullName);
+            sb.AppendLine($"User:");
+            sb.AppendLine($"  Name  -> {req.HttpContext.User.Identity!.Name}");
+            sb.AppendLine($"  Email -> {req.HttpContext.User.FindFirst("email")?.Value}");
 
             return new OkObjectResult(sb.ToString());
         }

@@ -32,22 +32,26 @@ namespace DarkLoop.Azure.Functions.Authorize.SampleFunctions.V4
                     // this line is here to bypass the token validation
                     // and test the functionality of this library.
                     // you can create a dummy token by executing the GetTestToken function in HelperFunctions.cs
+                    // THE FOLLOWING LINE SHOULD BE REMOVED IN A REAL-WORLD SCENARIO
                     options.SecurityTokenValidators.Add(new TestTokenValidator());
 
                     // this is what you should look for in a real-world scenario
-                    // comment this if you cloned this repository and want to test the library
+                    // comment the lines if you cloned this repository and want to test the library
                     options.Authority = "https://login.microsoftonline.com/<your-tenant>";
-                    options.Audience = "your-audience";
+                    options.Audience = "<your-audience>";
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
                         ValidateAudience = true,
                         ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true
+                        ValidateIssuerSigningKey = true,
                     };
                 }, true);
 
-            builder.Services.AddFunctionsAuthorization();
+            builder.Services.AddFunctionsAuthorization(options =>
+            {
+                // Add your policies here
+            });
 
             // If you want to disable authorization for all functions
             // decorated with FunctionAuthorizeAttribute you can add the following configuration.

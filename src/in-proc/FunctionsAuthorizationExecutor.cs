@@ -89,6 +89,10 @@ namespace DarkLoop.Azure.Functions.Authorization
             var authContext = new FunctionAuthorizationContextInternal(
                     context.FunctionName, httpContext, filter.Policy, authorizeResult);
 
+            var completed = false;
+
+            // need to know if the response body was completed by handling failure
+            httpContext.Response.BodyWriter.OnReaderCompleted((_, _) => completed = true, null);
             await _authorizationHandler.HandleResultAsync(authContext, httpContext);
 
             // As this is only executed through an invocation filter,
@@ -96,6 +100,13 @@ namespace DarkLoop.Azure.Functions.Authorization
             // By now the caller has already received an unauthorized or forbidden response.
             if (!authorizeResult.Succeeded)
             {
+                // in case the response body was not completed by the handler, we need to complete it before throwing the exception
+                // throwing the exception without completing will send a 500 to user
+                if (!completed)
+                {
+                    httpContext.Response.BodyWriter.Complete();
+                }
+
                 if (authorizeResult.Challenged)
                 {
                     BombFunctionInstanceAsync(HttpStatusCode.Unauthorized);

@@ -150,7 +150,9 @@ namespace DarkLoop.Azure.Functions.Authorization
                 }
                 else
                 {
-                    var schemes = (await _schemeProvider.GetRequestHandlerSchemesAsync()).Select(s => s.Name);
+                    var schemes = (await _schemeProvider.GetRequestHandlerSchemesAsync()).Select(s => s.Name).ToList();
+                    schemes = schemes.Count > 0 ? schemes : (await _schemeProvider.GetAllSchemesAsync()).Select(s => s.Name).ToList();
+
                     copy[0].AuthenticationSchemes = string.Join(",", schemes.Except(__dismissedSchemes));
                 }
 

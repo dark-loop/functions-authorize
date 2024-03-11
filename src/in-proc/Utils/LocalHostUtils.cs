@@ -32,7 +32,6 @@ namespace DarkLoop.Azure.Functions.Authorization.Utils
                 // this is problematic for testing as the core tools are not loaded and there's not package available
                 // enclosing in try/catch to avoid breaking the tests
                 __funcAssembly = Assembly.Load("func");
-                Console.WriteLine("Loaded func assembly");
             }
             catch
             {
@@ -41,7 +40,6 @@ namespace DarkLoop.Azure.Functions.Authorization.Utils
 
             if (IsLocalDevelopment)
             {
-                Console.WriteLine("Is local development");
                 Expression addSchemeExpression = (AuthenticationBuilder b) =>
                     b.AddScheme<AuthenticationSchemeOptions, AuthenticationHandler<AuthenticationSchemeOptions>>("scheme", null);
 

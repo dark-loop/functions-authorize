@@ -18,17 +18,23 @@ namespace SampleInProcFunctions.V4
             [HttpTrigger("get", Route = null)] HttpRequest req,
             ILogger log)
         {
+            var firstName = "Test";
+            var lastName = "User";
+            var email = "test.user@domain.com";
             var token = JwtUtils.GenerateJwtToken(new[] {
                 new Claim("aud", "api://default"),
                 new Claim("iss", "https://localhost/jwt/"),
                 new Claim("scp", "user_impersonation"),
                 new Claim("tid", Guid.NewGuid().ToString()),
                 new Claim("oid", Guid.NewGuid().ToString()),
-                new Claim("name", "Test User"),
-                new Claim(ClaimTypes.Upn, "test.user@domain.com"),
-                new Claim(ClaimTypes.GivenName, "Test"),
-                new Claim(ClaimTypes.Surname, "User"),
-                new Claim(ClaimTypes.Role, "Just a user")
+                new Claim("name", $"{firstName} {lastName}"),
+                new Claim(ClaimTypes.Name, email),
+                new Claim(ClaimTypes.Upn, email),
+                new Claim(ClaimTypes.Email, email),
+                new Claim(ClaimTypes.GivenName, firstName),
+                new Claim(ClaimTypes.Surname, lastName),
+                new Claim("role", "Just a user"),
+                new Claim("role", "admin"),
             });
 
             return await Task.FromResult<IActionResult>(new OkObjectResult(token));
