@@ -20,6 +20,10 @@ This projects is open source and may be redistributed under the terms of the [Ap
 ## Change log
 Adding change log starting with version 3.1.3
 
+### 4.0.1
+Deprecating `DarkLoop.Azure.Functions.Authorize` package in favor of `DarkLoop.Azure.Functions.Authorization.InProcess` package.<br/>
+The functionality remains the same, it's just a way to keep package naming in sync.
+
 ### 4.0.0
 Starting from 4.0.0, support for Azure Functions V4 Isolated mode with ASPNET Core integration is added.
 The package is now split into two separate packages, one for each mode. 

@@ -34,7 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="DarkLoop.Azure.Functions.Authorize" Key="$(PublicKey)" />
+    <InternalsVisibleTo Include="DarkLoop.Azure.Functions.Authorization.InProcess" Key="$(PublicKey)" />
     <InternalsVisibleTo Include="DarkLoop.Azure.Functions.Authorization.Isolated" Key="$(PublicKey)" />
     <InternalsVisibleTo Include="Abstractions.Tests" Key="$(PublicKey)" />
     <InternalsVisibleTo Include="Isolated.Tests" Key="$(PublicKey)" />
