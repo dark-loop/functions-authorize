@@ -92,7 +92,7 @@ namespace DarkLoop.Azure.Functions.Authorization
             var completed = false;
 
             // need to know if the response body was completed by handling failure
-            httpContext.Response.BodyWriter.OnReaderCompleted((_, _) => completed = true, null);
+            httpContext.Response.OnCompleted(async () => completed = await Task.FromResult(true));
             await _authorizationHandler.HandleResultAsync(authContext, httpContext);
 
             // As this is only executed through an invocation filter,
@@ -104,7 +104,7 @@ namespace DarkLoop.Azure.Functions.Authorization
                 // throwing the exception without completing will send a 500 to user
                 if (!completed)
                 {
-                    httpContext.Response.BodyWriter.Complete();
+                    await httpContext.Response.CompleteAsync();
                 }
 
                 if (authorizeResult.Challenged)
