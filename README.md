@@ -12,7 +12,7 @@ This projects is open source and may be redistributed under the terms of the [Ap
 
 ## Package Status
 ### Releases
-[![Nuget](https://img.shields.io/nuget/v/DarkLoop.Azure.Functions.Authorize.svg)](https://www.nuget.org/packages/DarkLoop.Azure.Functions.Authorize)
+[![Nuget](https://img.shields.io/nuget/v/DarkLoop.Azure.Functions.Authorization.Abstractions.svg)](https://www.nuget.org/packages/DarkLoop.Azure.Functions.Authorization.Abstractions)
 
 ### Builds
 ![master build status](https://dev.azure.com/darkloop/DarkLoop%20Core%20Library/_apis/build/status/Open%20Source/Functions%20Authorize%20-%20Pack?branchName=master)
