@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\in-proc\DarkLoop.Azure.Functions.Authorize.csproj" />
+    <ProjectReference Include="..\..\src\in-proc\DarkLoop.Azure.Functions.Authorization.InProcess.csproj" />
     <ProjectReference Include="..\Common.Tests\Common.Tests.csproj" />
   </ItemGroup>
 

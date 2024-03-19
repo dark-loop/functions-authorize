@@ -37,7 +37,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{284270FA-368
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DarkLoop.Azure.Functions.Authorization.Abstractions", "src\abstractions\DarkLoop.Azure.Functions.Authorization.Abstractions.csproj", "{323DA8F9-DC74-491D-9B52-8F58ABAB2B47}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DarkLoop.Azure.Functions.Authorize", "src\in-proc\DarkLoop.Azure.Functions.Authorize.csproj", "{5766D189-64CA-4735-8378-5D5B529F8EB1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DarkLoop.Azure.Functions.Authorization.InProcess", "src\in-proc\DarkLoop.Azure.Functions.Authorization.InProcess.csproj", "{5766D189-64CA-4735-8378-5D5B529F8EB1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DarkLoop.Azure.Functions.Authorization.Isolated", "src\isolated\DarkLoop.Azure.Functions.Authorization.Isolated.csproj", "{05468E2C-BFCF-49A4-A083-8BEE26767FA5}"
 EndProject
