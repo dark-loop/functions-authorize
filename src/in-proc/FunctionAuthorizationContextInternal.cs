@@ -12,7 +12,7 @@ namespace DarkLoop.Azure.Functions.Authorization
     /// <summary>
     /// Internal implementation of the function authorization context.
     /// </summary>
-    internal class FunctionAuthorizationContextInternal : FunctionAuthorizationContext<HttpContext>
+    internal sealed class FunctionAuthorizationContextInternal : FunctionAuthorizationContext<HttpContext>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FunctionAuthorizationContextInternal"/> class.

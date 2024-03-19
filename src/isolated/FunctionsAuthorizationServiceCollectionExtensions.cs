@@ -10,7 +10,12 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-    // Adding this functionality to maintain compatibility with the original library
+    /// <summary>
+    /// Extension methods for <see cref="IServiceCollection"/> to add Functions built-in authorization.
+    /// </summary>
+    /// <remarks>
+    /// Adding this functionality to maintain compatibility with the original library.
+    /// </remarks>
     public static class FunctionsAuthorizationServiceCollectionExtensions
     {
         /// <summary>
@@ -41,6 +46,8 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <summary>
         /// Adds Functions built-in authentication.
         /// </summary>
+        /// <param name="services">The current service collection.</param>
+        /// <param name="defaultScheme">The default authentication scheme.</param>
         public static FunctionsAuthenticationBuilder AddFunctionsAuthentication(
             this IServiceCollection services, string? defaultScheme = null)
         {
@@ -52,6 +59,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <summary>
         /// Configures authentication for the Azure Functions app. It will setup Functions built-in authentication.
         /// </summary>
+        /// <param name="services">The current service collection.</param>
         /// <param name="configure">The <see cref="AuthenticationOptions"/> configuration logic.</param>
         public static FunctionsAuthenticationBuilder AddFunctionsAuthentication(
             this IServiceCollection services, Action<AuthenticationOptions>? configure)

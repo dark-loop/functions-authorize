@@ -31,8 +31,11 @@ namespace DarkLoop.Azure.Functions.Authorization
         /// <summary>
         /// Initializes a new instance of the <see cref="FunctionsAuthorizationProvider"/> class.
         /// </summary>
-        /// <param name="cache"></param>
-        /// <param name="schemeProvider"></param>
+        /// <param name="schemeProvider">ASP.NET Core's scheme provider.</param>
+        /// <param name="cache">The function filter cache.</param>
+        /// <param name="options">The options object serving metadata. This doesn't change through the life of the application.</param>
+        /// <param name="configOptions">The options object to manage configuration settings that might change from config source.</param>
+        /// <param name="logger">Logger for class.</param>
         public FunctionsAuthorizationProvider(
             IAuthenticationSchemeProvider schemeProvider,
             IFunctionsAuthorizationFilterCache<int> cache,
@@ -62,6 +65,7 @@ namespace DarkLoop.Azure.Functions.Authorization
 
             if (_filterCache.TryGetFilter(key, out var filter))
             {
+                _logger.LogDebug("Found cached filter for function.");
                 return filter!;
             }
 
@@ -73,9 +77,11 @@ namespace DarkLoop.Azure.Functions.Authorization
             {
                 if (_filterCache.TryGetFilter(key, out filter))
                 {
+                    _logger.LogDebug("Found cached filter for function while trying to generate one.");
                     return filter!;
                 }
 
+                _logger.LogDebug("Generating filter for function.");
                 var functionMetadata = _metadataStore.GetMetadata(functionName);
 
                 if (functionMetadata == FunctionAuthorizationMetadata.Empty)
@@ -97,7 +103,7 @@ namespace DarkLoop.Azure.Functions.Authorization
                 if (policyProvider.AllowsCachingPolicies)
                 {
 #endif
-                _filterCache.SetFilter(key, filter);
+                    _filterCache.SetFilter(key, filter);
 #if NET7_0_OR_GREATER
                 }
 #endif
@@ -124,10 +130,12 @@ namespace DarkLoop.Azure.Functions.Authorization
 
             if (!needsScheme)
             {
+                _logger.LogDebug("Using provided authentication schemes.");
                 return await AuthorizationPolicy.CombineAsync(policyProvider, authorizationData);
             }
             else
             {
+                _logger.LogDebug("Using empty scheme strategy to assign schemes for policy.");
                 var strategy = _options.CurrentValue.EmptySchemeStrategy;
 
                 if (strategy is EmptySchemeStrategy.UseDefaultScheme && defaultScheme is null)
@@ -146,10 +154,12 @@ namespace DarkLoop.Azure.Functions.Authorization
 
                 if (strategy is EmptySchemeStrategy.UseDefaultScheme)
                 {
+                    _logger.LogDebug("Using default authentication scheme.");
                     copy[0].AuthenticationSchemes = defaultScheme!.Name;
                 }
                 else
                 {
+                    _logger.LogDebug("Using all available authentication schemes.");
                     var schemes = (await _schemeProvider.GetRequestHandlerSchemesAsync()).Select(s => s.Name).ToList();
                     schemes = schemes.Count > 0 ? schemes : (await _schemeProvider.GetAllSchemesAsync()).Select(s => s.Name).ToList();
 

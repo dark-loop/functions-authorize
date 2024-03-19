@@ -24,22 +24,23 @@ namespace DarkLoop.Azure.Functions.Authorization
         private readonly IAuthorizationPolicyProvider _policyProvider;
         private readonly IPolicyEvaluator _policyEvaluator;
         private readonly IOptionsMonitor<FunctionsAuthorizationOptions> _configOptions;
-        private readonly FunctionsAuthorizationOptions _options;
         private readonly ILogger<FunctionsAuthorizationExecutor> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FunctionsAuthorizationExecutor"/> class.
         /// </summary>
-        /// <param name="authorizationProvider">Functions authorization filters provider</param>
-        /// <param name="authorizationHandler">An authorization handler</param>
-        /// <param name="policyEvaluator">The policy evaluator</param>
+        /// <param name="authorizationProvider">Functions authorization filters provider.</param>
+        /// <param name="authorizationHandler">An authorization handler.</param>
+        /// <param name="policyProvider">ASP.NET Core's policy provider.</param>
+        /// <param name="policyEvaluator">The policy evaluator.</param>
+        /// <param name="configOptions">The options object to control behavior base on settings that might be modified in config source.</param>
+        /// <param name="logger">The logger for the type.</param>
         public FunctionsAuthorizationExecutor(
             IFunctionsAuthorizationProvider authorizationProvider,
             IFunctionsAuthorizationResultHandler authorizationHandler,
             IAuthorizationPolicyProvider policyProvider,
             IPolicyEvaluator policyEvaluator,
             IOptionsMonitor<FunctionsAuthorizationOptions> configOptions,
-            IOptions<FunctionsAuthorizationOptions> options,
             ILogger<FunctionsAuthorizationExecutor> logger)
         {
             Check.NotNull(authorizationProvider, nameof(authorizationProvider));
@@ -54,7 +55,6 @@ namespace DarkLoop.Azure.Functions.Authorization
             _policyProvider = policyProvider;
             _policyEvaluator = policyEvaluator;
             _configOptions = configOptions;
-            _options = options.Value;
             _logger = logger;
         }
 
@@ -100,7 +100,7 @@ namespace DarkLoop.Azure.Functions.Authorization
             // By now the caller has already received an unauthorized or forbidden response.
             if (!authorizeResult.Succeeded)
             {
-                // in case the response body was not completed by the handler, we need to complete it before throwing the exception
+                // in case the response was not completed by the handler, we need to complete it before throwing the exception
                 // throwing the exception without completing will send a 500 to user
                 if (!completed)
                 {
@@ -124,8 +124,9 @@ namespace DarkLoop.Azure.Functions.Authorization
         /// <param name="status">The status to report back to caller.</param>
         /// <returns></returns>
         /// <exception cref="FunctionAuthorizationException"></exception>
-        private static void BombFunctionInstanceAsync(HttpStatusCode status)
+        private void BombFunctionInstanceAsync(HttpStatusCode status)
         {
+            _logger.LogDebug("Short-circuiting function execution due to authorization failure.");
             throw new FunctionAuthorizationException(status);
         }
     }

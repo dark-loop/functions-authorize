@@ -10,7 +10,10 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace DarkLoop.Azure.Functions.Authorization
 {
-    public class FunctionAuthorizationMetadata
+    /// <summary>
+    /// Authorization metadata for a function or type.
+    /// </summary>
+    public sealed class FunctionAuthorizationMetadata
     {
         private readonly int _key;
         private readonly string? _functionName;
@@ -68,7 +71,7 @@ namespace DarkLoop.Azure.Functions.Authorization
         /// Gets the name of the type declaring the function method.
         /// </summary>
         /// <remarks>The returned value is never <see langword="null"/>. Only for <see cref="Empty"/></remarks>
-        public virtual Type? DeclaringType => _declaringType;
+        public Type? DeclaringType => _declaringType;
 
         /// <summary>
         /// Gets a value indicating whether the function allows anonymous access.

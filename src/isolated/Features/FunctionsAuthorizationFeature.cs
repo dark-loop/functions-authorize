@@ -9,7 +9,7 @@ namespace DarkLoop.Azure.Functions.Authorization.Features
     /// <summary>
     /// Marker class for the functions authorization feature.
     /// </summary>
-    internal class FunctionsAuthorizationFeature : IFunctionsAuthorizationFeature
+    internal sealed class FunctionsAuthorizationFeature : IFunctionsAuthorizationFeature
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FunctionsAuthorizationFeature"/> class.

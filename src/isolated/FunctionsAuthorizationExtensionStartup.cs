@@ -12,8 +12,12 @@ using Microsoft.Extensions.Hosting;
 
 namespace DarkLoop.Azure.Functions.Authorization
 {
+    /// <summary>
+    /// Functions authorization extension startup.
+    /// </summary>
     public class FunctionsAuthorizationExtensionStartup : WorkerExtensionStartup
     {
+        /// <inheritdoc/>
         public override void Configure(IFunctionsWorkerApplicationBuilder applicationBuilder)
         {
             applicationBuilder.Services.AddFunctionsAuthorizationCore();

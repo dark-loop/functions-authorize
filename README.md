@@ -21,7 +21,23 @@ This projects is open source and may be redistributed under the terms of the [Ap
 Adding change log starting with version 3.1.3
 
 ### 4.0.0
-Information will be added soon.
+Starting from 4.0.0, support for Azure Functions V4 Isolated mode with ASPNET Core integration is added.
+The package is now split into two separate packages, one for each mode. 
+
+The package for Azure Functions V3+ In-Proc mode is now called `DarkLoop.Azure.Functions.Authorization.InProcess` and the package for Azure Functions V4 Isolated mode with ASPNET Core integration is called `DarkLoop.Azure.Functions.Authorize.Isolated`.
+
+- #### .NET 6 support
+  Starting with version 4.0.0, the package is now targeting .NET 6.0. This means that the package is no longer compatible with .NET 5 or lower. If you are using .NET 5 or lower, you should use version 3.1.3 of the package.
+  
+- #### DarkLoop.Azure.Functions.Authorize v4.0.0
+  This package is published but is now deprecated in favor of `DarkLoop.Azure.Functions.Authorization.InProcess`. All it's functionality remains the same. It's just a way to keep package naming in sync.
+
+- #### Introducing IFunctionsAuthorizationProvider interface
+  The `IFunctionsAuthorizationProvider` interface is introduced to allow for custom authorization filter provisioning to the framework.
+  By default the framework relies on decorating the function or type with `[FunctionAuthorize]`. You could skip this decoration and provide the middleware with an authorization filter sourced from your own mechanism, for example a database.
+  At this moment this can be done only with Isolated mode even when the interface is defined in the shared package.<br/>
+  Support for In-Process will be added in a future version, once source generators are introduced, as the in-process framework relies on Invocation Filters to enable authorization.
+  Replacing the service in the application services would break the authorization for in-process mode at this point.
 
 ### 3.1.3
 3.1.3 and lower versions only support Azure Functions V3 In-Proc mode. Starting from 4.0.0, support for Azure Functions V4 Isolated mode with ASPNET Core integration is added.

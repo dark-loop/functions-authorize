@@ -17,6 +17,7 @@ namespace DarkLoop.Azure.Functions.Authorization
         /// Executes the authorization for a given function.
         /// </summary>
         /// <param name="context">The function authorization context.</param>
+        /// <param name="httpContext">The request context.</param>
         Task ExecuteAuthorizationAsync(FunctionExecutingContext context, HttpContext httpContext);
     }
 }

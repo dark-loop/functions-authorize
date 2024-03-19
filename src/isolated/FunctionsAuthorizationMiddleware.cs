@@ -17,7 +17,7 @@ using Microsoft.Extensions.Options;
 namespace DarkLoop.Azure.Functions.Authorization
 {
     /// <inheritdoc cref="IFunctionsWorkerMiddleware"/>
-    internal class FunctionsAuthorizationMiddleware : IFunctionsWorkerMiddleware
+    internal sealed class FunctionsAuthorizationMiddleware : IFunctionsWorkerMiddleware
     {
         private readonly IFunctionsAuthorizationProvider _authorizationProvider;
         private readonly IFunctionsAuthorizationResultHandler _authorizationResultHandler;

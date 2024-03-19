@@ -21,8 +21,7 @@ namespace DarkLoop.Azure.Functions.Authorization.Bindings
         /// <summary>
         /// Initializes a new instance of the <see cref="FunctionsAuthorizeBindingProvider"/> class.
         /// </summary>
-        /// <param name="policyCache"></param>
-        /// <param name="filterIndex"></param>
+        /// <param name="options">The options object.</param>
         public FunctionsAuthorizeBindingProvider(
             IOptions<FunctionsAuthorizationOptions> options)
         {

@@ -17,6 +17,7 @@ namespace DarkLoop.Azure.Functions.Authorization
         /// <summary>
         /// Registers all the functions in the specified <paramref name="declaringType"/>.
         /// </summary>
+        /// <param name="options">The current options.</param>
         /// <param name="declaringType">The type containing the functions.</param>
         /// <param name="existing">A value indicating whether the function declaring type is already registered.</param>
         /// <returns>Return a <see cref="FunctionAuthorizationMetadata"/> to keep configuring.</returns>
@@ -32,6 +33,7 @@ namespace DarkLoop.Azure.Functions.Authorization
         /// Registers the function with the specified name in <paramref name="functionName"/> 
         /// in the type specified in <paramref name="declaringType"/>.
         /// </summary>
+        /// <param name="options">The current options.</param>
         /// <param name="functionName">The name of the function.</param>
         /// <param name="declaringType">The type declaring the function.</param>
         /// <returns>Return a <see cref="FunctionAuthorizationMetadata"/> to keep configuring.</returns>
@@ -54,7 +56,7 @@ namespace DarkLoop.Azure.Functions.Authorization
         /// Registers the authorization metadata for the function extracted from attribute.
         /// </summary>
         /// <typeparam name="TAuthAttribute">The type of authorization attribute to lookup.</typeparam>
-        /// <param name="options">The current options object</param>
+        /// <param name="options">The current options.</param>
         /// <param name="functionName">The name of the function.</param>
         /// <param name="declaringType">The type declaring the function.</param>
         /// <param name="functionMethod">The entry point method for the function.</param>
