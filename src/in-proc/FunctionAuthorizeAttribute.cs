@@ -20,8 +20,15 @@ namespace DarkLoop.Azure.Functions.Authorize
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
     public class FunctionAuthorizeAttribute : FunctionInvocationFilterAttribute, IFunctionInvocationFilter, IAuthorizeData
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FunctionAuthorizeAttribute"/> class.
+        /// </summary>
         public FunctionAuthorizeAttribute() { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FunctionAuthorizeAttribute"/> class.
+        /// </summary>
+        /// <param name="policy">The name of the policy used to authorize the function.</param>
         public FunctionAuthorizeAttribute(string policy)
         {
             this.Policy = policy;
@@ -44,7 +51,7 @@ namespace DarkLoop.Azure.Functions.Authorize
 
         async Task IFunctionInvocationFilter.OnExecutingAsync(FunctionExecutingContext executingContext, CancellationToken cancellationToken)
         {
-            if (!this.IsProcessed(executingContext))
+            if (!IsProcessed(executingContext))
             {
                 var httpContext = executingContext.GetHttpContext();
                 if (httpContext is not null)
@@ -57,7 +64,7 @@ namespace DarkLoop.Azure.Functions.Authorize
             }
         }
 
-        private bool IsProcessed(FunctionExecutingContext context)
+        private static bool IsProcessed(FunctionExecutingContext context)
         {
             const string valueKey = "__AuthZProcessed";
 

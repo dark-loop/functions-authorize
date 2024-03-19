@@ -23,6 +23,7 @@ namespace DarkLoop.Azure.Functions.Authorization
 
         /// <summary>
         /// Gets the number of authorization metadata items in the collection.
+        /// </summary>
         internal int Count => _items.Count;
 
         /// <summary>
@@ -41,15 +42,11 @@ namespace DarkLoop.Azure.Functions.Authorization
         /// </summary>
         /// <param name="functionName">The name of the function.</param>
         /// <param name="declaringType">The type declaring the function method.</param>
-
         /// <returns>An instance of <see cref="FunctionAuthorizationMetadata"/></returns>
-        /// <exception cref="InvalidOperationException">
-        /// When a rule already exists and defines a different value than the one specified in <paramref name="allowAnonymous"/>
-        /// </exception>
         internal FunctionAuthorizationMetadata Add(string functionName, Type declaringType)
         {
             this.RegisterFunctionDeclaringType(functionName, declaringType);
-            
+
             return this.GetOrAdd(functionName, declaringType, out _);
         }
 

@@ -13,10 +13,15 @@ namespace DarkLoop.Azure.Functions.Authorization.Internal
     /// <summary>
     /// Provides a way to monitor a key and block other threads from entering the same key.
     /// </summary>
-    internal class KeyedMonitor
+    internal static class KeyedMonitor
     {
         private static readonly ConcurrentDictionary<object, KeyedLock> __locks = new();
         private static readonly Timer __cleanupTimer = new(_ => OnCleanup(), null, TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1));
+
+        static KeyedMonitor()
+        {
+            AppDomain.CurrentDomain.ProcessExit += (s, e) => __cleanupTimer.Dispose();
+        }
 
         /// <summary>
         /// Enters the monitor for the specified key.
@@ -65,8 +70,8 @@ namespace DarkLoop.Azure.Functions.Authorization.Internal
         private class KeyedLock
         {
             private readonly SemaphoreSlim _monitor;
+            private readonly bool _disposeOnFirstExit;
             private bool _terminated;
-            private bool _disposeOnFirstExit;
 
             public KeyedLock(bool disposeOnFirstExit)
             {

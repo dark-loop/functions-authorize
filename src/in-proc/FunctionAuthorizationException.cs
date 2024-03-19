@@ -8,6 +8,9 @@ using System.Runtime.Serialization;
 
 namespace DarkLoop.Azure.Functions.Authorization
 {
+    /// <summary>
+    /// Represents an exception that is thrown when an authorization error is encountered to short circuit function execution.
+    /// </summary>
     public sealed class FunctionAuthorizationException : Exception
     {
         private readonly HttpStatusCode _statusCode;
@@ -18,8 +21,12 @@ namespace DarkLoop.Azure.Functions.Authorization
             _statusCode = status;
         }
 
+        /// <inheritdoc/>
         public FunctionAuthorizationException(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
+        /// <summary>
+        /// Gets the status code that was returned to caller.
+        /// </summary>
         public HttpStatusCode AuthorizationStatus => _statusCode;
 
         private static int ValidateStatus(HttpStatusCode status)

@@ -16,7 +16,7 @@ namespace DarkLoop.Azure.Functions.Authorization
     public static class AuthorizationBuilderExtensions
     {
         /// <summary>
-        /// Disables authorization for functions decorated with <see cref="FunctionAuthorizeAttribute"/>
+        /// Disables authorization for functions instrumented for authorization.
         /// </summary>
         /// <param name="builder">The current <see cref="AuthorizationBuilder"/> instance.</param>
         /// <param name="disabled">A value indicating whether authorization is disabled.</param>

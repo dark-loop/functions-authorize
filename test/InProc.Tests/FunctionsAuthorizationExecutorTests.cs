@@ -71,7 +71,6 @@ namespace InProc.Tests
                 _services!.GetRequiredService<IAuthorizationPolicyProvider>(),
                 _services!.GetRequiredService<IPolicyEvaluator>(),
                 _services!.GetRequiredService<IOptionsMonitor<FunctionsAuthorizationOptions>>(),
-                _services!.GetRequiredService<IOptions<FunctionsAuthorizationOptions>>(),
                 logger);
 
             var functionId = Guid.NewGuid();
@@ -105,7 +104,6 @@ namespace InProc.Tests
                 _services!.GetRequiredService<IAuthorizationPolicyProvider>(),
                 policyEvaluatorMock.Object,
                 _services!.GetRequiredService<IOptionsMonitor<FunctionsAuthorizationOptions>>(),
-                _services!.GetRequiredService<IOptions<FunctionsAuthorizationOptions>>(),
                 _services!.GetRequiredService<ILogger<FunctionsAuthorizationExecutor>>());
 
             var functionId = Guid.NewGuid();
@@ -142,7 +140,6 @@ namespace InProc.Tests
                 _services!.GetRequiredService<IAuthorizationPolicyProvider>(),
                 policyEvaluatorMock.Object,
                 _services!.GetRequiredService<IOptionsMonitor<FunctionsAuthorizationOptions>>(),
-                _services!.GetRequiredService<IOptions<FunctionsAuthorizationOptions>>(),
                 _services!.GetRequiredService<ILogger<FunctionsAuthorizationExecutor>>());
 
             var functionId = Guid.NewGuid();
@@ -184,7 +181,6 @@ namespace InProc.Tests
                 _services!.GetRequiredService<IAuthorizationPolicyProvider>(),
                 policyEvaluatorMock.Object,
                 _services!.GetRequiredService<IOptionsMonitor<FunctionsAuthorizationOptions>>(),
-                _services!.GetRequiredService<IOptions<FunctionsAuthorizationOptions>>(),
                 _services!.GetRequiredService<ILogger<FunctionsAuthorizationExecutor>>());
 
             var functionId = Guid.NewGuid();
@@ -226,7 +222,6 @@ namespace InProc.Tests
                 _services!.GetRequiredService<IAuthorizationPolicyProvider>(),
                 policyEvaluatorMock.Object,
                 _services!.GetRequiredService<IOptionsMonitor<FunctionsAuthorizationOptions>>(),
-                _services!.GetRequiredService<IOptions<FunctionsAuthorizationOptions>>(),
                 _services!.GetRequiredService<ILogger<FunctionsAuthorizationExecutor>>());
 
             var functionId = Guid.NewGuid();
@@ -242,7 +237,7 @@ namespace InProc.Tests
             policyEvaluatorMock.Verify(evaluator => evaluator.AuthorizeAsync(It.IsAny<AuthorizationPolicy>(), It.IsAny<AuthenticateResult>(), It.IsAny<HttpContext>(), It.IsAny<object>()), Times.Once);
         }
 
-        private FunctionExecutingContext SetupExecutingContext(Guid functionId, string functionName, HttpRequest request)
+        private static FunctionExecutingContext SetupExecutingContext(Guid functionId, string functionName, HttpRequest request)
         {
             var args = new Dictionary<string, object>
             {

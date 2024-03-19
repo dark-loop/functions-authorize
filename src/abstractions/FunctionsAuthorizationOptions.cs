@@ -12,7 +12,7 @@ namespace DarkLoop.Azure.Functions.Authorization
     /// </summary>
     [ExcludeFromCodeCoverage]
     // Important to keep this class POCO, any special functionality should be done with extension methods.
-    public class FunctionsAuthorizationOptions
+    public sealed class FunctionsAuthorizationOptions
     {
         internal readonly FunctionAuthorizationMetadataCollection AuthorizationMetadata = new();
 

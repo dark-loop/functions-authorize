@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace DarkLoop.Azure.Functions.Authorization
 {
+    /// <inheritdoc />
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
     [DebuggerDisplay("{ToString(),nq}")]
     [ExcludeFromCodeCoverage]

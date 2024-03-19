@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
+    /// <summary>
+    /// Extension methods for <see cref="IServiceCollection"/> to add Functions built-in authorization.
+    /// </summary>
     public static class FunctionsAuthorizationServiceCollectionExtensions
     {
         /// <summary>

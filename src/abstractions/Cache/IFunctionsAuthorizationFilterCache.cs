@@ -18,7 +18,7 @@ namespace DarkLoop.Azure.Functions.Authorization.Cache
         /// Sets the authorization filter for the specified function.
         /// </summary>
         /// <param name="functionIdentifier">The function unique identifier</param>
-        /// <param name="builder"></param>
+        /// <param name="filter">The filter to cache.</param>
         /// <returns></returns>
         bool SetFilter(TIdentifier functionIdentifier, FunctionAuthorizationFilter filter);
     }

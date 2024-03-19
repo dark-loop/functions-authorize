@@ -19,7 +19,7 @@ namespace DarkLoop.Azure.Functions.Authorization.Metadata
     /// <summary>
     /// Classifies functions based on their extension type.
     /// </summary>
-    internal class FunctionsAuthorizationMetadataMiddleware : IFunctionsWorkerMiddleware
+    internal sealed class FunctionsAuthorizationMetadataMiddleware : IFunctionsWorkerMiddleware
     {
         private readonly FunctionsAuthorizationOptions _options;
         private readonly ConcurrentDictionary<string, bool> _trackedHttp = new();

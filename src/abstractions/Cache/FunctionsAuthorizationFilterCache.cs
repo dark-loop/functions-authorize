@@ -7,7 +7,7 @@ using System.Collections.Concurrent;
 namespace DarkLoop.Azure.Functions.Authorization.Cache
 {
     /// <inheritdoc cref="IFunctionsAuthorizationFilterCache{TIdentifier}"/>
-    internal class FunctionsAuthorizationFilterCache<TIdentifier> : IFunctionsAuthorizationFilterCache<TIdentifier>
+    internal sealed class FunctionsAuthorizationFilterCache<TIdentifier> : IFunctionsAuthorizationFilterCache<TIdentifier>
         where TIdentifier : notnull
     {
         private readonly ConcurrentDictionary<TIdentifier, FunctionAuthorizationFilter> _filters = new();
