@@ -27,7 +27,7 @@ var host = new HostBuilder()
     .ConfigureServices(services =>
     {
         services
-            .AddFunctionsAuthenticationation(JwtBearerDefaults.AuthenticationScheme)
+            .AddFunctionsAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
                 options.Authority = "https://login.microsoftonline.com/your-tenant-id";
