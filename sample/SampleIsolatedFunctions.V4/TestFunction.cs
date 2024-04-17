@@ -14,7 +14,7 @@ using Microsoft.Extensions.Logging;
 
 namespace SampleIsolatedFunctions.V4
 {
-    [FunctionAuthorize(AuthenticationSchemes = "Bearer")]
+    [FunctionAuthorize()]
     public class TestFunction
     {
         private readonly ILogger<TestFunction> _logger;
@@ -25,7 +25,7 @@ namespace SampleIsolatedFunctions.V4
         }
 
         [Function("TestFunction")]
-        [Authorize(Roles = "admin")]
+        [Authorize]
         public async Task<IActionResult> Run([HttpTrigger("get", "post")] HttpRequest req)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
@@ -48,6 +48,12 @@ namespace SampleIsolatedFunctions.V4
             sb.AppendLine($"  Email -> {req.HttpContext.User.FindFirst("email")?.Value}");
 
             return new OkObjectResult(sb.ToString());
+        }
+
+        [Function("signin-oidc")]
+        public async Task<IActionResult> SignIn([HttpTrigger("get", "post")] HttpRequest req)
+        {
+            return new OkObjectResult("Sign in");
         }
     }
 }

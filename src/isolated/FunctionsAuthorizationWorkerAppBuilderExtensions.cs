@@ -14,6 +14,16 @@ namespace Microsoft.Azure.Functions.Worker
     public static class FunctionsAuthorizationWorkerAppBuilderExtensions
     {
         /// <summary>
+        /// Adds DarkLoop's Functions authentication middleware to the application pipeline.
+        /// </summary>
+        /// <param name="builder">The current builder.</param>
+        public static IFunctionsWorkerApplicationBuilder UseFunctionsAuthentication(this IFunctionsWorkerApplicationBuilder builder)
+        {
+            return builder.UseWhen<FunctionsAuthenticationMiddleware>(context =>
+                context.Features.Get<IFunctionsAuthorizationFeature>() is not null);
+        }
+
+        /// <summary>
         /// Adds DarkLoop's Functions authorization middleware to the application pipeline.
         /// </summary>
         /// <param name="builder">The current builder.</param>
