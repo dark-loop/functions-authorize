@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AsyncKeyedLock;
 using DarkLoop.Azure.Functions.Authorization.Cache;
 using DarkLoop.Azure.Functions.Authorization.Internal;
 using DarkLoop.Azure.Functions.Authorization.Properties;
@@ -26,6 +27,7 @@ namespace DarkLoop.Azure.Functions.Authorization
         private readonly IFunctionsAuthorizationFilterCache<int> _filterCache;
         private readonly FunctionAuthorizationMetadataCollection _metadataStore;
         private readonly IOptionsMonitor<FunctionsAuthorizationOptions> _options;
+        private readonly AsyncKeyedLocker<string> _asyncKeyedLocker;
         private readonly ILogger _logger;
 
         /// <summary>
@@ -41,6 +43,7 @@ namespace DarkLoop.Azure.Functions.Authorization
             IFunctionsAuthorizationFilterCache<int> cache,
             IOptions<FunctionsAuthorizationOptions> options,
             IOptionsMonitor<FunctionsAuthorizationOptions> configOptions,
+            AsyncKeyedLocker<string> asyncKeyedLocker,
             ILogger<IFunctionsAuthorizationProvider> logger)
         {
             Check.NotNull(schemeProvider, nameof(schemeProvider));
@@ -53,6 +56,7 @@ namespace DarkLoop.Azure.Functions.Authorization
             _filterCache = cache;
             _metadataStore = options.Value.AuthorizationMetadata;
             _options = configOptions;
+            _asyncKeyedLocker = asyncKeyedLocker;
             _logger = logger;
         }
 
@@ -71,9 +75,7 @@ namespace DarkLoop.Azure.Functions.Authorization
 
             var asyncKey = $"fap:{functionName}";
 
-            await KeyedMonitor.EnterAsync(asyncKey, unblockOnFirstExit: true);
-
-            try
+            using (await _asyncKeyedLocker.LockAsync(asyncKey).ConfigureAwait(false))
             {
                 if (_filterCache.TryGetFilter(key, out filter))
                 {
@@ -109,10 +111,6 @@ namespace DarkLoop.Azure.Functions.Authorization
 #endif
 
                 return filter;
-            }
-            finally
-            {
-                KeyedMonitor.Exit(asyncKey);
             }
         }
 

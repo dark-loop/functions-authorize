@@ -3,6 +3,7 @@
 // </copyright>
 
 using Abstractions.Tests.Fakes;
+using AsyncKeyedLock;
 using Common.Tests;
 using DarkLoop.Azure.Functions.Authorization;
 using DarkLoop.Azure.Functions.Authorization.Cache;
@@ -63,7 +64,7 @@ namespace Abstractions.Tests
 
             // Arrange
             var provider = new FunctionsAuthorizationProvider(
-                _schemeProvider!, new FunctionsAuthorizationFilterCache<int>(), _options!, _configOptions!, _logger!);
+                _schemeProvider!, new FunctionsAuthorizationFilterCache<int>(), _options!, _configOptions!, new AsyncKeyedLocker<string>(), _logger!);
 
             _onLog = (level, eventId, state, exception, formatter) =>
             {
@@ -91,7 +92,7 @@ namespace Abstractions.Tests
 
             // Arrange
             var provider = new FunctionsAuthorizationProvider(
-                _schemeProvider!, new FunctionsAuthorizationFilterCache<int>(), _options!, _configOptions!, _logger!);
+                _schemeProvider!, new FunctionsAuthorizationFilterCache<int>(), _options!, _configOptions!, new AsyncKeyedLocker<string>(), _logger!);
 
             _onLog = (level, eventId, state, exception, formatter) =>
             {
@@ -123,7 +124,7 @@ namespace Abstractions.Tests
 
             // Arrange
             var provider = new FunctionsAuthorizationProvider(
-                _schemeProvider!, new FunctionsAuthorizationFilterCache<int>(), _options!, _configOptions!, _logger!);
+                _schemeProvider!, new FunctionsAuthorizationFilterCache<int>(), _options!, _configOptions!, new AsyncKeyedLocker<string>(), _logger!);
 
             _onLog = (level, eventId, state, exception, formatter) =>
             {

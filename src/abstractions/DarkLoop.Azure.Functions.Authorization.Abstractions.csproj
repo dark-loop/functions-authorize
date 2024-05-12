@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="AsyncKeyedLock" Version="6.4.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="3.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Metadata" Version="3.0.3" />
   </ItemGroup>
