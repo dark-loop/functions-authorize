@@ -2,6 +2,7 @@
 //  Copyright (c) DarkLoop. All rights reserved.
 // </copyright>
 
+using AsyncKeyedLock;
 using DarkLoop.Azure.Functions.Authorization.Cache;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -20,7 +21,8 @@ namespace DarkLoop.Azure.Functions.Authorization
 
             return services
                 .AddSingleton<IFunctionsAuthorizationResultHandler, FunctionsAuthorizationResultHandler>()
-                .AddSingleton(typeof(IFunctionsAuthorizationFilterCache<>), typeof(FunctionsAuthorizationFilterCache<>));
+                .AddSingleton(typeof(IFunctionsAuthorizationFilterCache<>), typeof(FunctionsAuthorizationFilterCache<>))
+                .AddSingleton(new AsyncKeyedLocker<string>(o => { o.PoolSize = 20; o.PoolInitialFill = 1; }));
         }
     }
 }

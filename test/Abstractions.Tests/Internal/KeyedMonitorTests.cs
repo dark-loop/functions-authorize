@@ -2,12 +2,7 @@
 //  Copyright (c) DarkLoop. All rights reserved.
 // </copyright>
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DarkLoop.Azure.Functions.Authorization.Internal;
+using AsyncKeyedLock;
 
 namespace Abstractions.Tests.Internal
 {
@@ -19,6 +14,7 @@ namespace Abstractions.Tests.Internal
         private List<string>? _unmonitored;
         private List<string>? _monitored;
         private List<string>? _winner;
+        private AsyncKeyedLocker<string>? _asyncKeyedLocker;
 
         [TestInitialize]
         public void Initialize()
@@ -28,6 +24,11 @@ namespace Abstractions.Tests.Internal
             _unmonitored = new List<string>();
             _monitored = new List<string>();
             _winner = new List<string>();
+            _asyncKeyedLocker = new(o =>
+            {
+                o.PoolSize = 20;
+                o.PoolInitialFill = 1;
+            });
         }
 
         [TestMethod("KeyedMonitor: should allow for other threads to unblock after first exit")]
@@ -75,9 +76,7 @@ namespace Abstractions.Tests.Internal
                 return;
             }
 
-            await KeyedMonitor.EnterAsync("x", unblockOnFirstExit: true);
-
-            try
+            using (await _asyncKeyedLocker.LockAsync("x"))
             {
                 await Task.Delay(millisecondsToBlock);
                 _monitored!.Add(name);
@@ -89,10 +88,6 @@ namespace Abstractions.Tests.Internal
 
                 _flag = true;
                 _winner!.Add(name);
-            }
-            finally
-            {
-                KeyedMonitor.Exit("x");
             }
         }
     }
