@@ -3,8 +3,8 @@
 // </copyright>
 
 using System;
-using DarkLoop.Azure.Functions.Authorization.Utils;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Azure.WebJobs.Script.WebHost;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -35,7 +35,7 @@ namespace Microsoft.Extensions.DependencyInjection
             if (services is null) throw new ArgumentNullException(nameof(services));
             if (configure is null) throw new ArgumentNullException(nameof(configure));
 
-            HostUtils.AddFunctionsBuiltInAuthorization(services);
+            services.AddWebJobsScriptHostAuthorization();
             services.Configure(configure);
 
             return services;

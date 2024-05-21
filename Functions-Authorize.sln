@@ -14,6 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".root", ".root", "{3A9A7517
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
+		ChangeLog.md = ChangeLog.md
 		LICENSE = LICENSE
 		NuGet.Config = NuGet.Config
 		README.md = README.md

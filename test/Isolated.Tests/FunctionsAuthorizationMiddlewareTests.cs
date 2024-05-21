@@ -35,8 +35,8 @@ namespace Isolated.Tests
             services
                 .AddSingleton<IConfiguration>(config)
                 .AddLogging()
-                .AddFunctionsAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer();
+                .AddFunctionsAuthentication(JwtFunctionsBearerDefaults.AuthenticationScheme)
+                .AddJwtFunctionsBearer();
 
             services
                 .AddFunctionsAuthorization()

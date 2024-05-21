@@ -40,7 +40,7 @@ namespace InProc.Tests
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 })
-                .AddJwtBearer(delegate { }, true);
+                .AddJwtFunctionsBearer(delegate { });
 
             services
                 .AddFunctionsAuthorization()

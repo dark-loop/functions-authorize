@@ -24,10 +24,11 @@ namespace DarkLoop.Azure.Functions.Authorize.SampleFunctions.V4
             builder.Services
                 .AddFunctionsAuthentication(options =>
                 {
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultScheme = JwtFunctionsBearerDefaults.AuthenticationScheme;
+                    options.DefaultAuthenticateScheme = JwtFunctionsBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtFunctionsBearerDefaults.AuthenticationScheme;
                 })
-                .AddJwtBearer(options =>
+                .AddJwtFunctionsBearer(options =>
                 {
                     // this line is here to bypass the token validation
                     // and test the functionality of this library.
@@ -37,16 +38,16 @@ namespace DarkLoop.Azure.Functions.Authorize.SampleFunctions.V4
 
                     // this is what you should look for in a real-world scenario
                     // comment the lines if you cloned this repository and want to test the library
-                    options.Authority = "https://login.microsoftonline.com/<your-tenant>";
-                    options.Audience = "<your-audience>";
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                    };
-                }, true);
+                    //options.Authority = "https://login.microsoftonline.com/<your-tenant>";
+                    //options.Audience = "<your-audience>";
+                    //options.TokenValidationParameters = new TokenValidationParameters
+                    //{
+                    //    ValidateIssuer = true,
+                    //    ValidateAudience = true,
+                    //    ValidateLifetime = true,
+                    //    ValidateIssuerSigningKey = true,
+                    //};
+                });
 
             builder.Services.AddFunctionsAuthorization(options =>
             {
@@ -65,7 +66,7 @@ namespace DarkLoop.Azure.Functions.Authorize.SampleFunctions.V4
 
         public override void ConfigureAppConfiguration(IFunctionsConfigurationBuilder builder)
         {
-            builder.ConfigurationBuilder.AddUserSecrets<Startup>(false, reloadOnChange: true);
+            builder.ConfigurationBuilder.AddUserSecrets<Startup>(true, reloadOnChange: true);
 
             Configuration = builder.ConfigurationBuilder.Build();
 

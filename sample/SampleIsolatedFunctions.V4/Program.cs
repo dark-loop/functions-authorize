@@ -4,6 +4,7 @@
 
 using System.IdentityModel.Tokens.Jwt;
 using Common.Tests;
+using DarkLoop.Azure.Functions.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,8 +30,8 @@ var host = new HostBuilder()
     .ConfigureServices(services =>
     {
         services
-            .AddFunctionsAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
+            .AddFunctionsAuthentication(JwtFunctionsBearerDefaults.AuthenticationScheme)
+            .AddJwtFunctionsBearer(options =>
             {
                 // this line is here to bypass the token validation
                 // and test the functionality of this library.
