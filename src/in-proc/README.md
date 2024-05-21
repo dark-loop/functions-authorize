@@ -3,6 +3,13 @@ Bringing AuthorizeAttribute Behavior to Azure Functions v3 and v4 (In-Process)
 
 It hooks into .NET Core dependency injection container to enable authentication and authorization in the same way  ASP.NET Core does.
 
+> **Breaking for current package consumers** <br/>
+> Starting with version 4.1.0, due to security changes made on the Functions runtime, the Bearer scheme is no longer supported for your app functions.<br/>
+> Use `AddJwtFunctionsBearer(Action<JwtBearerOptions>)` instead of `AddJwtBearer(Action<JwtBearerOptions>)` when setting up authentication.
+Using `AddJwtBearer` will generate a compilation error when used against `FunctionsAuthenticationBuilder`. 
+We are introducing `JwtFunctionsBearerDefaults` to refer to the suggested new custom scheme name.<br/>
+No changes should be required if already using a custom scheme name.
+
 ## Using the package
 ### Installing the package
 `dotnet add package DarkLoop.Azure.Functions.Authorize`
@@ -31,7 +38,8 @@ namespace MyFunctionAppNamespace
           options.ClientId = "<my-client-id>";
           // ... more options here
         })
-        // This is important as Bearer scheme is used by the platform
+        // This is important as Bearer scheme is used by the runtime
+        // and no longer supported by this framework.
         .AddJwtFunctionsBearer(options =>
         {
           options.Audience = "<my-audience>";
