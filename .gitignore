@@ -328,3 +328,5 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+/sample/SampleInProcFunctions.V4/Properties/ServiceDependencies/dl-inproc-func - Zip Deploy
+/sample/SampleIsolatedFunctions.V4/Properties/serviceDependencies.dl-isloated-func - Zip Deploy.json

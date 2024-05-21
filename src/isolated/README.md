@@ -28,10 +28,11 @@ var host = new HostBuilder()
     {
         services
             .AddFunctionsAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
+            // This is important as Bearer scheme is used by the platform
+            .AddJwtFunctionsBearer(options =>
             {
                 options.Authority = "https://login.microsoftonline.com/your-tenant-id";
-                options.Audience = "your-client-id";
+                options.Audience = "your-app-id-uri";
                 ...
             });
 
@@ -46,6 +47,11 @@ var host = new HostBuilder()
 
 host.Run();
 ```
+
+> Starting with version 4.1.0, the default Bearer scheme is not supported by this framework.
+> You can use a custom scheme or make use of `AddJwtFunctionsBearer(Action<JwtBearerOptions>)` as shown above. This one
+adds the `"FunctionsBearer"` scheme. Clients still submit token for Authorization header in the format: `Bearer <token>`.
+
 
 Notice the call to `UseFunctionsAuthorization` in the `ConfigureFunctionsWebAppliction` method. 
 This is required to ensure that the middleware is placed in the pipeline where required function information is available.`

@@ -10,16 +10,22 @@
     <_FunctionsSkipCleanOutput>true</_FunctionsSkipCleanOutput>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Properties\ServiceDependencies\dl-inproc-func - Zip Deploy\profile.arm.json" />
+  </ItemGroup>
+
 	<ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authorization.Policy" Version="2.2.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Extensions" Version="1.1.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
-    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="4.1.2" />
+    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="[4.3.0,)" />
 	</ItemGroup>
+
 	<ItemGroup>
 	  <ProjectReference Include="..\..\src\in-proc\DarkLoop.Azure.Functions.Authorization.InProcess.csproj" />
 	  <ProjectReference Include="..\..\test\Common.Tests\Common.Tests.csproj" />
 	</ItemGroup>
+
 	<ItemGroup>
 		<None Update="host.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -29,4 +35,5 @@
 			<CopyToPublishDirectory>Never</CopyToPublishDirectory>
 		</None>
 	</ItemGroup>
+
 </Project>

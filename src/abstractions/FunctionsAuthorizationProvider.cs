@@ -10,6 +10,7 @@ using DarkLoop.Azure.Functions.Authorization.Cache;
 using DarkLoop.Azure.Functions.Authorization.Internal;
 using DarkLoop.Azure.Functions.Authorization.Properties;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -20,7 +21,7 @@ namespace DarkLoop.Azure.Functions.Authorization
     internal class FunctionsAuthorizationProvider : IFunctionsAuthorizationProvider
     {
         private static readonly IEnumerable<string> __dismissedSchemes =
-            new[] { Constants.WebJobsAuthScheme, Constants.ArmTokenAuthScheme };
+            new[] { Constants.WebJobsAuthScheme, Constants.ArmTokenAuthScheme, JwtBearerDefaults.AuthenticationScheme };
 
         private readonly IAuthenticationSchemeProvider _schemeProvider;
         private readonly IFunctionsAuthorizationFilterCache<int> _filterCache;

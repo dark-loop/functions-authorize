@@ -5,9 +5,7 @@
 using System;
 using DarkLoop.Azure.Functions.Authorization;
 using DarkLoop.Azure.Functions.Authorization.Internal;
-using DarkLoop.Azure.Functions.Authorization.Utils;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.Extensions.Options;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -45,25 +43,19 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             var authBuilder = new FunctionsAuthenticationBuilder(services);
 
-            if (HostUtils.IsLocalDevelopment)
+            if (!string.IsNullOrWhiteSpace(defaultScheme))
             {
-                if (!string.IsNullOrWhiteSpace(defaultScheme))
-                {
-                    services.AddAuthentication(defaultScheme!);
-                }
-                else
-                {
-                    services.AddAuthentication();
-                }
-
-                LocalHostUtils.AddScriptJwtBearer(authBuilder);
-                LocalHostUtils.AddScriptAuthLevel(authBuilder);
-                LocalHostUtils.AddArmToken(authBuilder);
+                services.AddAuthentication(defaultScheme!);
             }
             else
             {
-                HostUtils.AddFunctionsBuiltInAuthentication(services);
+                services.AddAuthentication();
             }
+
+            authBuilder
+                .AddArmToken()
+                .AddScriptAuthLevel()
+                .AddScriptJwtBearer();
 
             if (configure is not null)
             {

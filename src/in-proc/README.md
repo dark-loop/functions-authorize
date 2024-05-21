@@ -31,7 +31,8 @@ namespace MyFunctionAppNamespace
           options.ClientId = "<my-client-id>";
           // ... more options here
         })
-        .AddJwtBearer(options =>
+        // This is important as Bearer scheme is used by the platform
+        .AddJwtFunctionsBearer(options =>
         {
           options.Audience = "<my-audience>";
           // ... more options here
@@ -49,6 +50,11 @@ namespace MyFunctionAppNamespace
   }
 }
 ```
+
+> Starting with version 4.1.0, the default Bearer scheme is not supported by this framework.
+> You can use a custom scheme or make use of `AddJwtFunctionsBearer(Action<JwtBearerOptions>)` as shown above. This one
+adds the `"FunctionsBearer"` scheme. Clients still submit token for Authorization header in the format: `Bearer <token>`.
+
 
 No need to register the middleware the way we do for ASP.NET Core applications.
 

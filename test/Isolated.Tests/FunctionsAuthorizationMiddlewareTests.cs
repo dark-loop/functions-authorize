@@ -8,7 +8,6 @@ using DarkLoop.Azure.Functions.Authorization;
 using DarkLoop.Azure.Functions.Authorization.Properties;
 using Isolated.Tests.Fakes;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Http;
@@ -35,8 +34,8 @@ namespace Isolated.Tests
             services
                 .AddSingleton<IConfiguration>(config)
                 .AddLogging()
-                .AddFunctionsAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer();
+                .AddFunctionsAuthentication(JwtFunctionsBearerDefaults.AuthenticationScheme)
+                .AddJwtFunctionsBearer();
 
             services
                 .AddFunctionsAuthorization()

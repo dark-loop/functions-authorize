@@ -2,11 +2,6 @@
 //  Copyright (c) DarkLoop. All rights reserved.
 // </copyright>
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DarkLoop.Azure.Functions.Authorization.Internal;
 
 namespace Abstractions.Tests.Internal

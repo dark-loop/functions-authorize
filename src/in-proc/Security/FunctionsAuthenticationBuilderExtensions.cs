@@ -24,6 +24,8 @@ namespace Microsoft.Extensions.DependencyInjection
         /// Bearer scheme is still in place, but Admin level is not set for incoming requests.
         /// <para>When setting this value to <c>true</c> (default) all existing configuration will be removed.</para></param>
         /// <returns>A instance of the <see cref="FunctionsAuthenticationBuilder"/></returns>
+        /// <remarks>This method will be removed in future versions.</remarks>
+        [Obsolete("This method is obsolete. Using this method might break Azure portal experience. Use the AddJwtFunctionsBearer(Action<JwtBearerOptions>) method instead.", true)]
         public static FunctionsAuthenticationBuilder AddJwtBearer(
             this FunctionsAuthenticationBuilder builder, bool removeBuiltInConfig = true)
         {
@@ -41,6 +43,8 @@ namespace Microsoft.Extensions.DependencyInjection
         /// Bearer scheme is still in place, but Admin level is not set incoming requests.
         /// <para>When setting this value to <see langword="true"/> (default) all existing configuration will be removed.</para></param>
         /// <returns>A instance of the <see cref="FunctionsAuthenticationBuilder"/></returns>
+        /// <remarks>This method will be removed in future versions.</remarks>
+        [Obsolete("This method is obsolete. Using this method might break Azure portal experience. Use the AddJwtFunctionsBearer(Action<JwtBearerOptions>) method instead.", true)]
         public static FunctionsAuthenticationBuilder AddJwtBearer(
             this FunctionsAuthenticationBuilder builder, Action<JwtBearerOptions> configureOptions, bool removeBuiltInConfig = true)
         {
