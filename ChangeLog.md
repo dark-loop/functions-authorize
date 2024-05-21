@@ -82,3 +82,5 @@ The package for Azure Functions V3+ In-Proc mode is now called `DarkLoop.Azure.F
 - #### Remove Functions bult-in JwtBearer configuration by default
   Azure Functions recently [added configuration](https://github.com/Azure/azure-functions-host/pull/9678) for issuer and audience validation for the default authentication flows, not the one supported by this package through `FunctionAuthorizeAttribute`, which interferes with token validation when using our own Bearer scheme token configuration.
   In prior versions, this package has functionality to clear Functions built-in configuration, but it was not enabled by default when using `AddJwtBearer(Action<JwtBearerOptions> configure, bool removeBuiltInConfig = false)`. Since the use of this package is commonly used for custom JWT token, the default value of `removeBuiltInConfig` is now `true`.
+  > This functionality is now deprecated and no longer supported starting in version 4.1.0. It will be removed in future versions.
+  > Bearer scheme is now used by the Functions runtime and another one should be used for your functions.

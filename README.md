@@ -3,6 +3,14 @@ Extension bringing AuthorizeAttribute Behavior to Azure Functions In-Proc and Is
 
 It hooks into .NET Core dependency injection container to enable authentication and authorization in the same way  ASP.NET Core does.
 
+> **Breaking for current package consumers** <br/>
+> Starting with version 4.1.0, due to security changes made on the Functions runtime, the Bearer scheme is no longer supported for your app functions.<br/>
+> Use `AddJwtFunctionsBearer(Action<JwtBearerOptions>)` instead of `AddJwtBearer(Action<JwtBearerOptions>)` when setting up authentication.
+Using `AddJwtBearer` will generate a compilation error when used against `FunctionsAuthenticationBuilder`. 
+We are introducing `JwtFunctionsBearerDefaults` to refer to the suggested new custom scheme name.<br/>
+No changes should be required if already using a custom scheme name.<br/>
+> Refer to respective README documentation for isolated and in-process for more information.
+
 ## Getting Started
 - [Azure Functions V3+ In-Proc mode](./src/in-proc/README.md)
 - [Azure Functions V4 Isolated mode with ASPNET Core integration](./src/isolated/README.md)
