@@ -6,7 +6,7 @@
     <Company>DarkLoop</Company>
     <Copyright>DarkLoop - All rights reserved</Copyright>
     <Product>DarkLoop's Azure Functions Authorization</Product>
-    <IsPreview>true</IsPreview>
+    <IsPreview>false</IsPreview>
     <AssemblyVersion>4.0.0.0</AssemblyVersion>
     <Version>4.1.0</Version>
     <FileVersion>$(Version).0</FileVersion>
