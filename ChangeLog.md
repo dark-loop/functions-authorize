@@ -1,6 +1,9 @@
 # Change log
 Change log stars with version 3.1.3
 
+## 4.1.1
+After authenticate but before authorize IAuthenticateResultFeature and IHttpAuthenticationFeature are now both set in HttpContext.Features and (for isolated Azure Functions) FunctionContext.Features.
+
 ## 4.1.0
 - ### [Breaking] Removing support for `Bearer` scheme and adding `FunctionsBearer`
   Recent security updates in the Azure Functions runtime are clashing with the use of the default, well known `Bearer` scheme.<br/>

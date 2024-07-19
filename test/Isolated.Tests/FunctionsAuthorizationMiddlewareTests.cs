@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Http.Features.Authentication;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -237,6 +238,50 @@ namespace Isolated.Tests
             policyEvaluatorMock.Verify(evaluator => evaluator.AuthorizeAsync(It.IsAny<AuthorizationPolicy>(), It.IsAny<AuthenticateResult>(), It.IsAny<HttpContext>(), It.IsAny<object>()), Times.Once);
         }
 
+        [TestMethod("AuthorizationMiddleware: on success should set appropriate HttpContext features")]
+        public async Task AuthorizationMiddlewareOnSuccessShouldSetAppropriateHttpContextFeatures()
+        {
+            // Arrange
+            var authorizationProviderMock = new Mock<IFunctionsAuthorizationProvider>();
+            authorizationProviderMock
+                .Setup(provider => provider.GetAuthorizationAsync(It.IsAny<string>(), It.IsAny<IAuthorizationPolicyProvider>()))
+                .ReturnsAsync(new FunctionAuthorizationFilter(new AuthorizationPolicyBuilder().RequireAssertion(_ => false).Build(), false));
+
+            var policyEvaluatorMock = new Mock<IPolicyEvaluator>();
+            policyEvaluatorMock
+                .Setup(evaluator => evaluator.AuthenticateAsync(It.IsAny<AuthorizationPolicy>(), It.IsAny<HttpContext>()))
+                .ReturnsAsync(AuthenticateResult.Success(new AuthenticationTicket(new System.Security.Claims.ClaimsPrincipal(), "fakeauth")));
+            policyEvaluatorMock
+                .Setup(evaluator => evaluator.AuthorizeAsync(It.IsAny<AuthorizationPolicy>(), It.IsAny<AuthenticateResult>(), It.IsAny<HttpContext>(), It.IsAny<object>()))
+                .ReturnsAsync(PolicyAuthorizationResult.Success());
+
+            var middleware = new FunctionsAuthorizationMiddleware(
+                authorizationProviderMock.Object,
+                _services!.GetRequiredService<IFunctionsAuthorizationResultHandler>(),
+                _services!.GetRequiredService<IAuthorizationPolicyProvider>(),
+                policyEvaluatorMock.Object,
+                _services!.GetRequiredService<IOptionsMonitor<FunctionsAuthorizationOptions>>(),
+                _services!.GetRequiredService<ILogger<FunctionsAuthorizationMiddleware>>());
+
+            var functionId = "098039841";
+            var entryPoint = $"{typeof(FakeFunctionClass).FullName}.TestFunction";
+            var httpContext = HttpUtils.SetupHttpContext(_services!);
+            var context = SetupFunctionContext(functionId, "TestFunction", entryPoint, "httpTrigger", "request", httpContext);
+
+            // Act
+            await middleware.Invoke(context, async fc =>
+            {
+                await Task.CompletedTask;
+            });
+
+            // Assert
+            Assert.IsNotNull(httpContext.Features.Get<IAuthenticateResultFeature>()?.AuthenticateResult);
+            Assert.IsNotNull(httpContext.Features.Get<IHttpAuthenticationFeature>()?.User);
+
+            Assert.IsNotNull(context.Features.Get<IAuthenticateResultFeature>()?.AuthenticateResult);
+            Assert.IsNotNull(context.Features.Get<IHttpAuthenticationFeature>()?.User);
+        }
+
         private FunctionContext SetupFunctionContext(
             string functionId, string functionName, string entryPoint, string triggerType, string boundTriggerParamName, HttpContext? httpContext = null)
         {
@@ -254,10 +299,11 @@ namespace Isolated.Tests
             }
 
             var context = new Mock<FunctionContext>();
+            var features = new FakeInvocationFeatures();
             context.Setup(context => context.FunctionId).Returns(functionId);
             context.Setup(context => context.FunctionDefinition.Name).Returns(functionName);
             context.Setup(context => context.FunctionDefinition.EntryPoint).Returns(entryPoint);
-            context.Setup(context => context.Features).Returns(Mock.Of<IInvocationFeatures>());
+            context.Setup(context => context.Features).Returns(features);
             context.Setup(context => context.Items).Returns(items);
             context
                 .Setup(contextMock => contextMock.FunctionDefinition.InputBindings)

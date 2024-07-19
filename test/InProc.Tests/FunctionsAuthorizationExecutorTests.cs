@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Http.Features.Authentication;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -235,6 +236,46 @@ namespace InProc.Tests
             await action.Should().ThrowAsync<FunctionAuthorizationException>();
             policyEvaluatorMock.Verify(evaluator => evaluator.AuthenticateAsync(It.IsAny<AuthorizationPolicy>(), It.IsAny<HttpContext>()), Times.Once);
             policyEvaluatorMock.Verify(evaluator => evaluator.AuthorizeAsync(It.IsAny<AuthorizationPolicy>(), It.IsAny<AuthenticateResult>(), It.IsAny<HttpContext>(), It.IsAny<object>()), Times.Once);
+        }
+
+        [TestMethod("AuthorizationExecutor: should set http features on authenticate success or failure")]
+        public async Task AuthorizationExecutorShouldSetHttpFeaturesOnSuccessOrFailure()
+        {
+            // Arrange
+            var options = _services!.GetRequiredService<IOptionsMonitor<FunctionsAuthorizationOptions>>();
+            options.CurrentValue.AuthorizationDisabled = false;
+
+            var authorizationProviderMock = new Mock<IFunctionsAuthorizationProvider>();
+            authorizationProviderMock
+                .Setup(provider => provider.GetAuthorizationAsync(It.IsAny<string>(), It.IsAny<IAuthorizationPolicyProvider>()))
+                .ReturnsAsync(new FunctionAuthorizationFilter(new AuthorizationPolicyBuilder().RequireAssertion(_ => false).Build(), false));
+
+            var policyEvaluatorMock = new Mock<IPolicyEvaluator>();
+            policyEvaluatorMock
+                .Setup(evaluator => evaluator.AuthenticateAsync(It.IsAny<AuthorizationPolicy>(), It.IsAny<HttpContext>()))
+                .ReturnsAsync(AuthenticateResult.Success(new AuthenticationTicket(new System.Security.Claims.ClaimsPrincipal(), "")));
+            policyEvaluatorMock
+                .Setup(evaluator => evaluator.AuthorizeAsync(It.IsAny<AuthorizationPolicy>(), It.IsAny<AuthenticateResult>(), It.IsAny<HttpContext>(), It.IsAny<object>()))
+                .ReturnsAsync(PolicyAuthorizationResult.Success());
+
+            var executor = new FunctionsAuthorizationExecutor(
+                authorizationProviderMock.Object,
+                _services!.GetRequiredService<IFunctionsAuthorizationResultHandler>(),
+                _services!.GetRequiredService<IAuthorizationPolicyProvider>(),
+                policyEvaluatorMock.Object,
+                _services!.GetRequiredService<IOptionsMonitor<FunctionsAuthorizationOptions>>(),
+                _services!.GetRequiredService<ILogger<FunctionsAuthorizationExecutor>>());
+
+            var functionId = Guid.NewGuid();
+            var httpContext = HttpUtils.SetupHttpContext(_services!);
+            var context = SetupExecutingContext(functionId, "TestFunction", httpContext.Request);
+
+            // Act
+            await executor.ExecuteAuthorizationAsync(context, httpContext);
+
+            // Assert
+            Assert.IsNotNull(httpContext.Features.Get<IAuthenticateResultFeature>()?.AuthenticateResult);
+            Assert.IsNotNull(httpContext.Features.Get<IHttpAuthenticationFeature>()?.User);
         }
 
         private static FunctionExecutingContext SetupExecutingContext(Guid functionId, string functionName, HttpRequest request)

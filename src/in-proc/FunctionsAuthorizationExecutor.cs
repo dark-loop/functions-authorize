@@ -79,6 +79,8 @@ namespace DarkLoop.Azure.Functions.Authorization
 
             var authenticateResult = await _policyEvaluator.AuthenticateAsync(filter.Policy, httpContext);
 
+            httpContext.Features.SetAuthenticationFeatures(authenticateResult);
+
             // still authenticating in case token is sent to set context user but skipping authorization
             if (filter.AllowAnonymous)
             {
