@@ -238,7 +238,7 @@ namespace InProc.Tests
             policyEvaluatorMock.Verify(evaluator => evaluator.AuthorizeAsync(It.IsAny<AuthorizationPolicy>(), It.IsAny<AuthenticateResult>(), It.IsAny<HttpContext>(), It.IsAny<object>()), Times.Once);
         }
 
-        [TestMethod("AuthorizationExecutor: should throw when failed authentication and does not allow anonymous with Forbid")]
+        [TestMethod("AuthorizationExecutor: should set http features on authenticate success or failure")]
         public async Task AuthorizationExecutorShouldSetHttpFeaturesOnSuccessOrFailure()
         {
             // Arrange

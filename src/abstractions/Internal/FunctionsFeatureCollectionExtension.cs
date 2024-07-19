@@ -5,17 +5,20 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Http.Features.Authentication;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DarkLoop.Azure.Functions.Authorization.Internal
 {
+    // This functionality is used internally to emulate Asp.net's treatment of AuthenticateResult
     internal static class FunctionsFeatureCollectionExtension
     {
-        public static void SetAuthenticationFeatures(this IFeatureCollection features, AuthenticateResult result)
+        /// <summary>
+        /// Store the given AuthenticateResult in the IFeatureCollection accessible via
+        /// IAuthenticateResultFeature and IHttpAuthenticationFeature
+        /// </summary>
+        /// <param name="features">The feature collection to add to</param>
+        /// <param name="result">The authentication to expose in the feature collection</param>
+        /// <returns>The object associated with the features</returns>
+        public static FunctionAuthorizationFeature SetAuthenticationFeatures(this IFeatureCollection features, AuthenticateResult result)
         {
             // A single object is used to handle both of these features so that they stay in sync.
             // This is in line with what asp core normally does.
@@ -23,6 +26,8 @@ namespace DarkLoop.Azure.Functions.Authorization.Internal
 
             features.Set<IAuthenticateResultFeature>(feature);
             features.Set<IHttpAuthenticationFeature>(feature);
+
+            return feature;
         }
     }
 }

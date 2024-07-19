@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Http.Features.Authentication;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Middleware;
 using Microsoft.Extensions.Logging;
@@ -84,7 +85,11 @@ namespace DarkLoop.Azure.Functions.Authorization
 
             var authenticateResult = await _policyEvaluator.AuthenticateAsync(filter.Policy, httpContext);
 
-            httpContext.Features.SetAuthenticationFeatures(authenticateResult);
+            var authenticateFeature = httpContext.Features.SetAuthenticationFeatures(authenticateResult);
+
+            // We also make the features available in the FunctionContext 
+            context.Features.Set<IAuthenticateResultFeature>(authenticateFeature);
+            context.Features.Set<IHttpAuthenticationFeature>(authenticateFeature);
 
             if (filter.AllowAnonymous)
             {

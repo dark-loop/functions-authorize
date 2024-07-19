@@ -277,6 +277,9 @@ namespace Isolated.Tests
             // Assert
             Assert.IsNotNull(httpContext.Features.Get<IAuthenticateResultFeature>()?.AuthenticateResult);
             Assert.IsNotNull(httpContext.Features.Get<IHttpAuthenticationFeature>()?.User);
+
+            Assert.IsNotNull(context.Features.Get<IAuthenticateResultFeature>()?.AuthenticateResult);
+            Assert.IsNotNull(context.Features.Get<IHttpAuthenticationFeature>()?.User);
         }
 
         private FunctionContext SetupFunctionContext(
@@ -296,10 +299,11 @@ namespace Isolated.Tests
             }
 
             var context = new Mock<FunctionContext>();
+            var features = new FakeInvocationFeatures();
             context.Setup(context => context.FunctionId).Returns(functionId);
             context.Setup(context => context.FunctionDefinition.Name).Returns(functionName);
             context.Setup(context => context.FunctionDefinition.EntryPoint).Returns(entryPoint);
-            context.Setup(context => context.Features).Returns(Mock.Of<IInvocationFeatures>());
+            context.Setup(context => context.Features).Returns(features);
             context.Setup(context => context.Items).Returns(items);
             context
                 .Setup(contextMock => contextMock.FunctionDefinition.InputBindings)

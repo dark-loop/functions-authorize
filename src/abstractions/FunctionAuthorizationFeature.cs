@@ -5,20 +5,21 @@
 using DarkLoop.Azure.Functions.Authorization.Internal;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http.Features.Authentication;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DarkLoop.Azure.Functions.Authorization
 {
+    // This was designed with maximum compatibility with ASP.NET core. It keeps
+    // two separate features in sync with each other automatically.
     internal sealed class FunctionAuthorizationFeature : IAuthenticateResultFeature, IHttpAuthenticationFeature
     {
         private ClaimsPrincipal? _principal;
         private AuthenticateResult? _authenticateResult;
 
+        /// <summary>
+        /// Construct an instance of the feature with the given AuthenticateResult
+        /// </summary>
+        /// <param name="result"></param>
         public FunctionAuthorizationFeature(AuthenticateResult result)
         {
             Check.NotNull(result, nameof(result));
@@ -26,7 +27,7 @@ namespace DarkLoop.Azure.Functions.Authorization
             AuthenticateResult = result;
         }
 
-
+        /// <inheritdoc/>
         public AuthenticateResult? AuthenticateResult 
         { 
             get => _authenticateResult;
@@ -37,6 +38,7 @@ namespace DarkLoop.Azure.Functions.Authorization
             }
         }
 
+        /// <inheritdoc/>
         public ClaimsPrincipal? User 
         { 
             get => _principal; 
