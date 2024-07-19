@@ -25,11 +25,12 @@ namespace Common.Tests
             var streamReader = PipeReader.Create(requestStream);
             var requestHeaders = new HeaderDictionary();
             var streamWriter = PipeWriter.Create(responseStream);
+            var features = new FeatureCollection();
 
             httpContextMock.SetupGet(x => x.RequestServices).Returns(services);
             httpContextMock.SetupGet(x => x.Request).Returns(requestMock.Object);
             httpContextMock.SetupGet(x => x.Response).Returns(responseMock.Object);
-            httpContextMock.SetupGet(x => x.Features).Returns(Mock.Of<IFeatureCollection>());
+            httpContextMock.SetupGet(x => x.Features).Returns(features);
             httpContextMock.SetupGet(x => x.Items).Returns(new Dictionary<object, object?>());
             requestMock.SetupGet(x => x.RouteValues).Returns(new RouteValueDictionary());
             requestMock.SetupGet(x => x.Body).Returns(requestStream);
@@ -43,5 +44,6 @@ namespace Common.Tests
 
             return httpContextMock.Object;
         }
+
     }
 }
