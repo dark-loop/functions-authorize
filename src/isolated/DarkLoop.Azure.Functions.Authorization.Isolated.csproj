@@ -3,7 +3,7 @@
   <PropertyGroup>
     <AssemblyName>DarkLoop.Azure.Functions.Authorization.Isolated</AssemblyName>
     <RootNamespace>DarkLoop.Azure.Functions.Authorization</RootNamespace>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
     <Version>0.0.1-preview</Version>
     <Description>Azure Functions V4 in Isolated mode extension to enable authentication and authorization on a per function basis based on ASPNET Core frameworks.</Description>
     <Nullable>enable</Nullable>
