@@ -2,10 +2,8 @@
 //  Copyright (c) DarkLoop. All rights reserved.
 // </copyright>
 
-using System.IdentityModel.Tokens.Jwt;
 using Common.Tests;
 using DarkLoop.Azure.Functions.Authorization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

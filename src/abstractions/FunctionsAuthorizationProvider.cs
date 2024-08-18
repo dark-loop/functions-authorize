@@ -70,8 +70,8 @@ namespace DarkLoop.Azure.Functions.Authorization
                 return filter!;
             }
 
-            var asyncKey = $"fap:{functionName}";
-
+            // ensuring key is interned before entering monitor since key is compared as object
+            var asyncKey = string.Intern($"fap:{functionName}");
             await KeyedMonitor.EnterAsync(asyncKey, unblockOnFirstExit: true);
 
             try
