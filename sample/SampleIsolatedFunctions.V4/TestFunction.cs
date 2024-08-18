@@ -14,7 +14,7 @@ using Microsoft.Extensions.Logging;
 
 namespace SampleIsolatedFunctions.V4
 {
-    [FunctionAuthorize(AuthenticationSchemes = "Bearer")]
+    [FunctionAuthorize(AuthenticationSchemes = "FunctionsBearer")]
     public class TestFunction
     {
         private readonly ILogger<TestFunction> _logger;
