@@ -57,7 +57,7 @@ namespace DarkLoop.Azure.Functions.Authorization.Metadata
             // is thread-safe on a per function basis.
             // Ensuring key is interned before entering monitor since key is compared as object
             var monitorKey = string.Intern($"famm:{context.FunctionId}");
-            await KeyedMonitor.EnterAsync(monitorKey);
+            await KeyedMonitor.EnterAsync(monitorKey, unblockOnFirstExit: true);
 
             try
             {
