@@ -1,8 +1,13 @@
 # Change log
 Change log stars with version 3.1.3
 
+## 4.1.2
+- **[Bug Fix]** The main change in this version is ensuring metadata collection middleware is thread safe when no metadata has been built for a specific function. Thanks @dstenroejl for reporting [issue](https://github.com/dark-loop/functions-authorize/issues/62).
+- Using `FunctionsBearer` scheme in sample application to align with implementation.
+
 ## 4.1.1
-After authenticate but before authorize IAuthenticateResultFeature and IHttpAuthenticationFeature are now both set in HttpContext.Features and (for isolated Azure Functions) FunctionContext.Features.
+- After authenticate but before authorize IAuthenticateResultFeature and IHttpAuthenticationFeature are now both set in HttpContext.Features and (for isolated Azure Functions) FunctionContext.Features.
+- Adding support for multiple framework versions in same package instead of only targeting .NET 6. This ensures the right version for authentication assemblies to be loaded for the target ASP.NET Core version used in environment.
 
 ## 4.1.0
 - ### [Breaking] Removing support for `Bearer` scheme and adding `FunctionsBearer`
