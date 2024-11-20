@@ -69,7 +69,7 @@ namespace Microsoft.Extensions.DependencyInjection
             return services.AddFunctionsAuthentication(null, configure);
         }
 
-        public static FunctionsAuthenticationBuilder AddFunctionsAuthentication(
+        private static FunctionsAuthenticationBuilder AddFunctionsAuthentication(
             this IServiceCollection services, string? defaultScheme, Action<AuthenticationOptions>? configure)
         {
             var builder = new FunctionsAuthenticationBuilder(services);
