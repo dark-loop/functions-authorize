@@ -16,6 +16,26 @@ namespace Microsoft.Extensions.DependencyInjection
         /// </summary>
         /// <param name="builder">The current authentication builder.</param>
         /// <param name="configureOptions">An action configuring the JWT options for authentication. 
+        /// <param name="authenticationScheme">The authentication scheme to use.</param>"
+        /// <returns>A instance of the <see cref="FunctionsAuthenticationBuilder"/></returns>
+        public static FunctionsAuthenticationBuilder AddJwtFunctionsBearer(
+            this FunctionsAuthenticationBuilder builder, string authenticationScheme, Action<JwtBearerOptions> configureOptions)
+        {
+            if (authenticationScheme.Equals(JwtBearerDefaults.AuthenticationScheme, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new ArgumentException("Bearer scheme cannot be specified as it conflicts with Azure Functions built-in authentication", nameof(authenticationScheme));
+            }
+            
+            builder.AddJwtBearer(authenticationScheme, configureOptions);
+
+            return builder;
+        }
+
+        /// <summary>
+        /// Adds the JWT "FunctionsBearer" scheme to the authentication configuration.
+        /// </summary>
+        /// <param name="builder">The current authentication builder.</param>
+        /// <param name="configureOptions">An action configuring the JWT options for authentication. 
         /// <returns>A instance of the <see cref="FunctionsAuthenticationBuilder"/></returns>
         public static FunctionsAuthenticationBuilder AddJwtFunctionsBearer(
             this FunctionsAuthenticationBuilder builder, Action<JwtBearerOptions> configureOptions)
