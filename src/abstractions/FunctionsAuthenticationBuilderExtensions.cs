@@ -26,6 +26,11 @@ namespace Microsoft.Extensions.DependencyInjection
                 throw new ArgumentException("Bearer scheme cannot be specified as it conflicts with Azure Functions built-in authentication", nameof(authenticationScheme));
             }
 
+            if (authenticationScheme.Equals(JwtBearerDeafaults.AuthenticationScheme, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new ArgumentException("Bearer scheme cannot be specified as it conflicts with Azure Functions built-in authentication", nameof(authenticationScheme))
+            }
+            
             builder.AddJwtBearer(authenticationScheme, configureOptions);
 
             return builder;
