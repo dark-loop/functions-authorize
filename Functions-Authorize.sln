@@ -53,6 +53,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Isolated.Tests", "test\Isol
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InProc.Tests", "test\InProc.Tests\InProc.Tests.csproj", "{3E24DA59-3292-430E-B784-5FC13CAEDA5E}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SampleIsolatedFunctionsFSharp_V4", "sample\SampleIsolatedFunctionsFSharp.V4\SampleIsolatedFunctionsFSharp_V4.fsproj", "{60017B6F-8423-4D2F-A080-9C7A40C663C3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,6 +97,10 @@ Global
 		{3E24DA59-3292-430E-B784-5FC13CAEDA5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E24DA59-3292-430E-B784-5FC13CAEDA5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E24DA59-3292-430E-B784-5FC13CAEDA5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60017B6F-8423-4D2F-A080-9C7A40C663C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60017B6F-8423-4D2F-A080-9C7A40C663C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60017B6F-8423-4D2F-A080-9C7A40C663C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60017B6F-8423-4D2F-A080-9C7A40C663C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -109,6 +115,7 @@ Global
 		{E7143566-8DA8-4D2F-AA23-7FB0BADE229F} = {051D16F8-54BB-482B-B2A9-47E2DA89E6DB}
 		{4E74E715-7549-46C4-AF0F-464C24FA00E7} = {051D16F8-54BB-482B-B2A9-47E2DA89E6DB}
 		{3E24DA59-3292-430E-B784-5FC13CAEDA5E} = {051D16F8-54BB-482B-B2A9-47E2DA89E6DB}
+		{60017B6F-8423-4D2F-A080-9C7A40C663C3} = {53EC585B-CE9B-4E7D-B2E2-F7A9B6DA0FE7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {546E3A6C-060C-4630-BEEE-46A1F8715347}
