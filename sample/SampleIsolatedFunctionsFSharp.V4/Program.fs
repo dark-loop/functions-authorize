@@ -20,7 +20,10 @@ open Microsoft.IdentityModel.Tokens
 
 let host = 
     HostBuilder()
-        .ConfigureFunctionsWebApplication(fun builder -> builder.UseFunctionsAuthorization() |> ignore )
+        .ConfigureFunctionsWebApplication(fun builder -> 
+            //This is needed to make F# variants of startup work nicely
+            FunctionsAuthorizationExtensionStartup().Configure(builder)
+            builder.UseFunctionsAuthorization() |> ignore )
         .ConfigureServices(fun services ->    
             services
                 .AddFunctionsAuthentication(JwtFunctionsBearerDefaults.AuthenticationScheme)
