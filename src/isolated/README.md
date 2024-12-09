@@ -67,6 +67,8 @@ adds the `"FunctionsBearer"` scheme. Clients still submit token for Authorizatio
 Notice the call to `UseFunctionsAuthorization` in the `ConfigureFunctionsWebAppliction` method. 
 This is required to ensure that the middleware is placed in the pipeline where required function information is available.`
 
+Mind that the startup if coding in F# will be somewhat different. Please do check the [sample for F#](../../sample/SampleIsolatedFunctionsFSharp.V4/Program.fs)
+
 ### Using the attribute
 And now lets use `FunctionAuthorizeAttribute` the same way we use `AuthorizeAttribute` in our ASP.NET Core applications.
 ```csharp
