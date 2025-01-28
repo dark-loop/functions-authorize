@@ -8,7 +8,7 @@
     <Product>DarkLoop's Azure Functions Authorization</Product>
     <IsPreview>true</IsPreview>
     <AssemblyVersion>4.0.0.0</AssemblyVersion>
-    <Version>4.1.4</Version>
+    <Version>4.2.0</Version>
     <FileVersion>$(Version).0</FileVersion>
     <RepositoryUrl>https://github.com/dark-loop/functions-authorize</RepositoryUrl>
     <License>https://github.com/dark-loop/functions-authorize/blob/master/LICENSE</License>

@@ -21,9 +21,6 @@ namespace DarkLoop.Azure.Functions.Authorization
             _statusCode = status;
         }
 
-        /// <inheritdoc/>
-        public FunctionAuthorizationException(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
         /// <summary>
         /// Gets the status code that was returned to caller.
         /// </summary>

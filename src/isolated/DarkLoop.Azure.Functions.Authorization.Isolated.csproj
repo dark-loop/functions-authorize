@@ -3,7 +3,7 @@
   <PropertyGroup>
     <AssemblyName>DarkLoop.Azure.Functions.Authorization.Isolated</AssemblyName>
     <RootNamespace>DarkLoop.Azure.Functions.Authorization</RootNamespace>
-    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net8.0</TargetFrameworks>
     <Version>0.0.1-preview</Version>
     <Description>Azure Functions V4 in Isolated mode extension to enable authentication and authorization on a per function basis based on ASPNET Core frameworks.</Description>
     <Nullable>enable</Nullable>
@@ -23,6 +23,8 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Abstractions" Version="1.3.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http.AspNetCore" Version="1.3.2" />
+    <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="6.35.0" Condition="'$(TargetFramework)' == 'net6.0'" />
+    <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.1.0" Condition="'$(TargetFramework)' == 'net8.0'" />
   </ItemGroup>
 
   <ItemGroup>

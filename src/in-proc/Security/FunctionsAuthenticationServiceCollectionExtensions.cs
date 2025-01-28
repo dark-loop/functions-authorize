@@ -53,7 +53,6 @@ namespace Microsoft.Extensions.DependencyInjection
             }
 
             authBuilder
-                .AddArmToken()
                 .AddScriptAuthLevel()
                 .AddScriptJwtBearer();
 

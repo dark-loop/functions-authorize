@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<AzureFunctionsVersion>v4</AzureFunctionsVersion>
 		<UserSecretsId>51dc0b9d-8e74-45ec-aebc-1d3d6934faf5</UserSecretsId>
     <IsPackable>false</IsPackable>

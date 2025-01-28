@@ -1,6 +1,14 @@
 # Change log
 Change log stars with version 3.1.3
 
+## 4.2.0
+- Removing support for STS .NET versions (7.0), as these versions are not supported by Azure Functions runtime.
+- Removing ARM authentication support to align with Azure Functions runtime changes.
+- Aligning IdentityModel packages versions with versions specified in the *Script.WebHost** project.
+
+## 4.1.3
+- Adding support for specifying a scheme in `AddJwtFunctionsBearer` method as an overload. It throws exception if 'Bearer' is used as a scheme name.
+
 ## 4.1.2
 - **[Bug Fix]** The main change in this version is ensuring metadata collection middleware is thread safe when no metadata has been built for a specific function. Thanks @dstenroejl for reporting [issue](https://github.com/dark-loop/functions-authorize/issues/62).
 - Using `FunctionsBearer` scheme in sample application to align with implementation.
