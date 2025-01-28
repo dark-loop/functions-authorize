@@ -16,7 +16,7 @@
     <PackageReference Include="Moq" Version="4.20.70" />
     <PackageReference Include="coverlet.collector" Version="3.2.0" />
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Http" Version="3.2.0" />
-    <PackageReference Include="Microsoft.Azure.WebJobs.Script.WebHost" Version="4.834.1" />
+    <PackageReference Include="Microsoft.Azure.WebJobs.Script.WebHost" Version="[4.35.1,)" />
   </ItemGroup>
 
   <ItemGroup>
