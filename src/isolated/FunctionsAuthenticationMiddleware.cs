@@ -1,0 +1,119 @@
+﻿// <copyright file="FunctionsAuthenticationMiddleware.cs" company="DarkLoop" author="Arturo Martinez">
+//  Copyright (c) DarkLoop. All rights reserved.
+// </copyright>
+
+using DarkLoop.Azure.Functions.Authorization.Internal;
+using DarkLoop.Azure.Functions.Authorization.Properties;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Policy;
+using Microsoft.AspNetCore.Http.Features.Authentication;
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Middleware;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.Extensions;
+
+namespace DarkLoop.Azure.Functions.Authorization;
+
+internal sealed class FunctionsAuthenticationMiddleware : IFunctionsWorkerMiddleware
+{
+  #region Private Fields
+
+  private readonly IFunctionsAuthorizationProvider _authorizationProvider;
+  private readonly IFunctionsAuthorizationResultHandler _authorizationResultHandler;
+  private readonly IOptionsMonitor<FunctionsAuthorizationOptions> _configOptions;
+  private readonly ILogger<FunctionsAuthenticationMiddleware> _logger;
+  private readonly IPolicyEvaluator _policyEvaluator;
+  private readonly IAuthorizationPolicyProvider _policyProvider;
+
+  #endregion Private Fields
+
+  #region Public Constructors
+
+  /// <summary>
+  /// Initializes a new instance of the <see cref="FunctionsAuthenticationMiddleware"/> class.
+  /// </summary>
+  /// <param name="authorizationProvider">Functions authorization provider to retrieve filters.</param>
+  /// <param name="authorizationHandler">Authorization handler.</param>
+  /// <param name="policyProvider">ASP.NET Core's authorization policy provider.</param>
+  /// <param name="policyEvaluator">ASP.NET Core's policy evaluator.</param>
+  /// <param name="configOptions">Functions authorization configure options.</param>
+  /// <param name="logger">A logger object for diagnostics.</param>
+  public FunctionsAuthenticationMiddleware(
+      IFunctionsAuthorizationProvider authorizationProvider,
+      IAuthorizationPolicyProvider policyProvider,
+      IPolicyEvaluator policyEvaluator,
+      IOptionsMonitor<FunctionsAuthorizationOptions> configOptions,
+      ILogger<FunctionsAuthenticationMiddleware> logger)
+  {
+    Check.NotNull(authorizationProvider, nameof(authorizationProvider));
+    Check.NotNull(policyProvider, nameof(policyProvider));
+    Check.NotNull(policyEvaluator, nameof(policyEvaluator));
+    Check.NotNull(configOptions, nameof(configOptions));
+    Check.NotNull(logger, nameof(logger));
+
+    _authorizationProvider = authorizationProvider;
+    _policyProvider = policyProvider;
+    _policyEvaluator = policyEvaluator;
+    _configOptions = configOptions;
+    _logger = logger;
+  }
+
+  #endregion Public Constructors
+
+  #region Public Methods
+
+  /// <inheritdoc />
+  public async Task Invoke(FunctionContext context, FunctionExecutionDelegate next)
+  {
+    var httpContext = context.GetHttpContext() ?? throw new NotSupportedException(IsolatedMessages.NotSupportedIsolatedMode);
+
+    if (this._configOptions.CurrentValue.AuthorizationDisabled)
+    {
+      var displayUrl = httpContext.Request.GetDisplayUrl();
+
+      _logger.LogWarning(IsolatedMessages.FunctionAuthIsDisabled, displayUrl);
+
+      await next(context);
+      return;
+    }
+
+    var filter = await _authorizationProvider.GetAuthorizationAsync(context.FunctionDefinition.Name, _policyProvider);
+
+    if (filter.Policy is null)
+    {
+      await next(context);
+      return;
+    }
+
+    var authenticateResult = await _policyEvaluator.AuthenticateAsync(filter.Policy, httpContext);
+
+    var authenticateFeature = httpContext.Features.SetAuthenticationFeatures(authenticateResult);
+
+    // We also make the features available in the FunctionContext
+    context.Features.Set<IAuthenticateResultFeature>(authenticateFeature);
+    context.Features.Set<IHttpAuthenticationFeature>(authenticateFeature);
+
+    if (filter.AllowAnonymous)
+    {
+      await next(context);
+      return;
+    }
+
+    if (authenticateResult is not null && !authenticateResult.Succeeded)
+    {
+      _logger.LogDebug(
+          IsolatedMessages.AuthenticationFailed,
+          filter.Policy.AuthenticationSchemes.Count > 0
+              ? " for " + string.Join(", ", filter.Policy.AuthenticationSchemes)
+              : string.Empty);
+    }
+
+    await next(context);
+  }
+
+  #endregion Public Methods
+}
