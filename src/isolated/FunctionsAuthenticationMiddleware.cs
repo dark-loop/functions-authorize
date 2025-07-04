@@ -20,8 +20,7 @@ namespace DarkLoop.Azure.Functions.Authorization;
 
 internal sealed class FunctionsAuthenticationMiddleware : IFunctionsWorkerMiddleware
 {
-  #region Private Fields
-
+  
   private readonly IFunctionsAuthorizationProvider _authorizationProvider;
   private readonly IFunctionsAuthorizationResultHandler _authorizationResultHandler;
   private readonly IOptionsMonitor<FunctionsAuthorizationOptions> _configOptions;
@@ -29,10 +28,8 @@ internal sealed class FunctionsAuthenticationMiddleware : IFunctionsWorkerMiddle
   private readonly IPolicyEvaluator _policyEvaluator;
   private readonly IAuthorizationPolicyProvider _policyProvider;
 
-  #endregion Private Fields
-
-  #region Public Constructors
-
+  
+  
   /// <summary>
   /// Initializes a new instance of the <see cref="FunctionsAuthenticationMiddleware"/> class.
   /// </summary>
@@ -62,10 +59,8 @@ internal sealed class FunctionsAuthenticationMiddleware : IFunctionsWorkerMiddle
     _logger = logger;
   }
 
-  #endregion Public Constructors
-
-  #region Public Methods
-
+  
+  
   /// <inheritdoc />
   public async Task Invoke(FunctionContext context, FunctionExecutionDelegate next)
   {
@@ -115,5 +110,4 @@ internal sealed class FunctionsAuthenticationMiddleware : IFunctionsWorkerMiddle
     await next(context);
   }
 
-  #endregion Public Methods
-}
+  }

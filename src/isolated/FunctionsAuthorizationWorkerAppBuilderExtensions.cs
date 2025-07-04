@@ -13,8 +13,7 @@ namespace Microsoft.Azure.Functions.Worker
   /// </summary>
   public static class FunctionsAuthorizationWorkerAppBuilderExtensions
   {
-    #region Public Methods
-
+    
     /// <summary>
     /// Adds both DarkLoop's Functions authentication and authorization middleware to the application pipeline.
     /// </summary>
@@ -50,6 +49,5 @@ namespace Microsoft.Azure.Functions.Worker
         context.Features.Get<IFunctionsAuthorizationFeature>() is not null);
     }
 
-    #endregion Public Methods
-  }
+      }
 }
