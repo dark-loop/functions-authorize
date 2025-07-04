@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http.Features.Authentication;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Middleware;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
@@ -19,16 +18,26 @@ namespace DarkLoop.Azure.Functions.Authorization;
 internal sealed class FunctionsAuthenticationMiddleware : IFunctionsWorkerMiddleware
 {
     private readonly ILogger<FunctionsAuthenticationMiddleware> _logger;
+    private readonly IAuthenticationHandlerProvider _authenticationHandlerProvider;
+    private readonly IAuthenticationSchemeProvider _authenticationSchemeProvider;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="FunctionsAuthenticationMiddleware"/> class.
     /// </summary>
+    /// <param name="authenticationHandlerProvider">authentication handler provider.</param>
+    /// <param name="authenticationSchemeProvider">authentication scheme provider.</param>
     /// <param name="logger">A logger object for diagnostics.</param>
     public FunctionsAuthenticationMiddleware(
+        IAuthenticationHandlerProvider authenticationHandlerProvider,
+        IAuthenticationSchemeProvider authenticationSchemeProvider,
         ILogger<FunctionsAuthenticationMiddleware> logger)
     {
+        Check.NotNull(authenticationHandlerProvider, nameof(authenticationHandlerProvider));
+        Check.NotNull(authenticationSchemeProvider, nameof(authenticationSchemeProvider));
         Check.NotNull(logger, nameof(logger));
 
+        _authenticationHandlerProvider = authenticationHandlerProvider;
+        _authenticationSchemeProvider = authenticationSchemeProvider;
         _logger = logger;
     }
 
@@ -37,18 +46,16 @@ internal sealed class FunctionsAuthenticationMiddleware : IFunctionsWorkerMiddle
     {
         var httpContext = context.GetHttpContext() ?? throw new NotSupportedException(IsolatedMessages.NotSupportedIsolatedMode);
 
-        var schemes = context.InstanceServices.GetRequiredService<IAuthenticationSchemeProvider>();
-        var handlers = context.InstanceServices.GetRequiredService<IAuthenticationHandlerProvider>();
-        foreach (var scheme in await schemes.GetRequestHandlerSchemesAsync())
+        foreach (var scheme in await _authenticationSchemeProvider.GetRequestHandlerSchemesAsync())
         {
-            var handler = await handlers.GetHandlerAsync(httpContext, scheme.Name) as IAuthenticationRequestHandler;
+            var handler = await _authenticationHandlerProvider.GetHandlerAsync(httpContext, scheme.Name) as IAuthenticationRequestHandler;
             if (handler != null && await handler.HandleRequestAsync())
             {
                 return;
             }
         }
 
-        var defaultAuthenticate = await schemes.GetDefaultAuthenticateSchemeAsync();
+        var defaultAuthenticate = await _authenticationSchemeProvider.GetDefaultAuthenticateSchemeAsync();
         if (defaultAuthenticate != null)
         {
             var result = await httpContext.AuthenticateAsync(defaultAuthenticate.Name);
@@ -64,7 +71,7 @@ internal sealed class FunctionsAuthenticationMiddleware : IFunctionsWorkerMiddle
             }
             else
             {
-                var allSchemes = (await schemes.GetAllSchemesAsync()).ToList();
+                var allSchemes = (await _authenticationSchemeProvider.GetAllSchemesAsync()).ToList();
                 _logger.LogDebug(
                     IsolatedMessages.AuthenticationFailed,
                     allSchemes.Count > 0
