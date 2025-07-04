@@ -17,87 +17,87 @@ using System.Threading.Tasks;
 
 namespace DarkLoop.Azure.Functions.Authorization
 {
-  /// <inheritdoc cref="IFunctionsWorkerMiddleware"/>
-  internal sealed class FunctionsAuthorizationMiddleware : IFunctionsWorkerMiddleware
-  {
-    
-    private readonly IFunctionsAuthorizationProvider _authorizationProvider;
-    private readonly IFunctionsAuthorizationResultHandler _authorizationResultHandler;
-    private readonly IOptionsMonitor<FunctionsAuthorizationOptions> _configOptions;
-    private readonly ILogger<FunctionsAuthorizationMiddleware> _logger;
-    private readonly IPolicyEvaluator _policyEvaluator;
-    private readonly IAuthorizationPolicyProvider _policyProvider;
-
-    
-    
-    /// <summary>
-    /// Initializes a new instance of the <see cref="FunctionsAuthorizationMiddleware"/> class.
-    /// </summary>
-    /// <param name="authorizationProvider">Functions authorization provider to retrieve filters.</param>
-    /// <param name="authorizationHandler">Authorization handler.</param>
-    /// <param name="policyProvider">ASP.NET Core's authorization policy provider.</param>
-    /// <param name="policyEvaluator">ASP.NET Core's policy evaluator.</param>
-    /// <param name="configOptions">Functions authorization configure options.</param>
-    /// <param name="logger">A logger object for diagnostics.</param>
-    public FunctionsAuthorizationMiddleware(
-            IFunctionsAuthorizationProvider authorizationProvider,
-            IFunctionsAuthorizationResultHandler authorizationHandler,
-            IAuthorizationPolicyProvider policyProvider,
-            IPolicyEvaluator policyEvaluator,
-            IOptionsMonitor<FunctionsAuthorizationOptions> configOptions,
-            ILogger<FunctionsAuthorizationMiddleware> logger)
+    /// <inheritdoc cref="IFunctionsWorkerMiddleware"/>
+    internal sealed class FunctionsAuthorizationMiddleware : IFunctionsWorkerMiddleware
     {
-      Check.NotNull(authorizationProvider, nameof(authorizationProvider));
-      Check.NotNull(authorizationHandler, nameof(authorizationHandler));
-      Check.NotNull(policyProvider, nameof(policyProvider));
-      Check.NotNull(policyEvaluator, nameof(policyEvaluator));
-      Check.NotNull(configOptions, nameof(configOptions));
-      Check.NotNull(logger, nameof(logger));
 
-      _authorizationProvider = authorizationProvider;
-      _authorizationResultHandler = authorizationHandler;
-      _policyProvider = policyProvider;
-      _policyEvaluator = policyEvaluator;
-      _configOptions = configOptions;
-      _logger = logger;
+        private readonly IFunctionsAuthorizationProvider _authorizationProvider;
+        private readonly IFunctionsAuthorizationResultHandler _authorizationResultHandler;
+        private readonly IOptionsMonitor<FunctionsAuthorizationOptions> _configOptions;
+        private readonly ILogger<FunctionsAuthorizationMiddleware> _logger;
+        private readonly IPolicyEvaluator _policyEvaluator;
+        private readonly IAuthorizationPolicyProvider _policyProvider;
+
+
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FunctionsAuthorizationMiddleware"/> class.
+        /// </summary>
+        /// <param name="authorizationProvider">Functions authorization provider to retrieve filters.</param>
+        /// <param name="authorizationHandler">Authorization handler.</param>
+        /// <param name="policyProvider">ASP.NET Core's authorization policy provider.</param>
+        /// <param name="policyEvaluator">ASP.NET Core's policy evaluator.</param>
+        /// <param name="configOptions">Functions authorization configure options.</param>
+        /// <param name="logger">A logger object for diagnostics.</param>
+        public FunctionsAuthorizationMiddleware(
+                IFunctionsAuthorizationProvider authorizationProvider,
+                IFunctionsAuthorizationResultHandler authorizationHandler,
+                IAuthorizationPolicyProvider policyProvider,
+                IPolicyEvaluator policyEvaluator,
+                IOptionsMonitor<FunctionsAuthorizationOptions> configOptions,
+                ILogger<FunctionsAuthorizationMiddleware> logger)
+        {
+            Check.NotNull(authorizationProvider, nameof(authorizationProvider));
+            Check.NotNull(authorizationHandler, nameof(authorizationHandler));
+            Check.NotNull(policyProvider, nameof(policyProvider));
+            Check.NotNull(policyEvaluator, nameof(policyEvaluator));
+            Check.NotNull(configOptions, nameof(configOptions));
+            Check.NotNull(logger, nameof(logger));
+
+            _authorizationProvider = authorizationProvider;
+            _authorizationResultHandler = authorizationHandler;
+            _policyProvider = policyProvider;
+            _policyEvaluator = policyEvaluator;
+            _configOptions = configOptions;
+            _logger = logger;
+        }
+
+
+
+        /// <inheritdoc />
+        public async Task Invoke(FunctionContext context, FunctionExecutionDelegate next)
+        {
+            var httpContext = context.GetHttpContext() ?? throw new NotSupportedException(IsolatedMessages.NotSupportedIsolatedMode);
+
+            if (this._configOptions.CurrentValue.AuthorizationDisabled)
+            {
+                var displayUrl = httpContext.Request.GetDisplayUrl();
+
+                _logger.LogWarning(IsolatedMessages.FunctionAuthIsDisabled, displayUrl);
+
+                await next(context);
+                return;
+            }
+
+            var filter = await _authorizationProvider.GetAuthorizationAsync(context.FunctionDefinition.Name, _policyProvider);
+
+            if (filter.Policy is null)
+            {
+                await next(context);
+                return;
+            }
+
+            var authenticateFeature = context.Features.Get<IAuthenticateResultFeature>();
+
+            var authenticateResult = authenticateFeature?.AuthenticateResult ??
+                                     await _policyEvaluator.AuthenticateAsync(filter.Policy, httpContext);
+
+            var authorizeResult = await _policyEvaluator.AuthorizeAsync(filter.Policy, authenticateResult!, httpContext, httpContext);
+            var authContext = new FunctionAuthorizationContext<FunctionContext>(
+                context.FunctionDefinition.Name, context, filter.Policy, authorizeResult);
+
+            await _authorizationResultHandler.HandleResultAsync(authContext, httpContext, async (ctx) => await next(ctx));
+        }
+
     }
-
-    
-    
-    /// <inheritdoc />
-    public async Task Invoke(FunctionContext context, FunctionExecutionDelegate next)
-    {
-      var httpContext = context.GetHttpContext() ?? throw new NotSupportedException(IsolatedMessages.NotSupportedIsolatedMode);
-
-      if (this._configOptions.CurrentValue.AuthorizationDisabled)
-      {
-        var displayUrl = httpContext.Request.GetDisplayUrl();
-
-        _logger.LogWarning(IsolatedMessages.FunctionAuthIsDisabled, displayUrl);
-
-        await next(context);
-        return;
-      }
-
-      var filter = await _authorizationProvider.GetAuthorizationAsync(context.FunctionDefinition.Name, _policyProvider);
-
-      if (filter.Policy is null)
-      {
-        await next(context);
-        return;
-      }
-
-      var authenticateFeature = context.Features.Get<IAuthenticateResultFeature>();
-
-      var authenticateResult = authenticateFeature?.AuthenticateResult ??
-                               await _policyEvaluator.AuthenticateAsync(filter.Policy, httpContext);
-
-      var authorizeResult = await _policyEvaluator.AuthorizeAsync(filter.Policy, authenticateResult!, httpContext, httpContext);
-      var authContext = new FunctionAuthorizationContext<FunctionContext>(
-          context.FunctionDefinition.Name, context, filter.Policy, authorizeResult);
-
-      await _authorizationResultHandler.HandleResultAsync(authContext, httpContext, async (ctx) => await next(ctx));
-    }
-
-      }
 }

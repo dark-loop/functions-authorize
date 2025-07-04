@@ -8,46 +8,46 @@ using Microsoft.Extensions.Hosting;
 
 namespace Microsoft.Azure.Functions.Worker
 {
-  /// <summary>
-  /// Extension methods for adding the <see cref="FunctionsAuthorizationMiddleware"/> to the application pipeline.
-  /// </summary>
-  public static class FunctionsAuthorizationWorkerAppBuilderExtensions
-  {
-    
     /// <summary>
-    /// Adds both DarkLoop's Functions authentication and authorization middleware to the application pipeline.
+    /// Extension methods for adding the <see cref="FunctionsAuthorizationMiddleware"/> to the application pipeline.
     /// </summary>
-    /// <param name="builder">The current builder.</param>
-    public static IFunctionsWorkerApplicationBuilder UseFunctionsAuth(this IFunctionsWorkerApplicationBuilder builder)
+    public static class FunctionsAuthorizationWorkerAppBuilderExtensions
     {
-      builder.UseWhen<FunctionsAuthenticationMiddleware>(context =>
-        context.Features.Get<IFunctionsAuthorizationFeature>() is not null);
 
-      builder.UseWhen<FunctionsAuthorizationMiddleware>(context =>
-                context.Features.Get<IFunctionsAuthorizationFeature>() is not null);
+        /// <summary>
+        /// Adds both DarkLoop's Functions authentication and authorization middleware to the application pipeline.
+        /// </summary>
+        /// <param name="builder">The current builder.</param>
+        public static IFunctionsWorkerApplicationBuilder UseFunctionsAuth(this IFunctionsWorkerApplicationBuilder builder)
+        {
+            builder.UseWhen<FunctionsAuthenticationMiddleware>(context =>
+              context.Features.Get<IFunctionsAuthorizationFeature>() is not null);
 
-      return builder;
+            builder.UseWhen<FunctionsAuthorizationMiddleware>(context =>
+                      context.Features.Get<IFunctionsAuthorizationFeature>() is not null);
+
+            return builder;
+        }
+
+        /// <summary>
+        /// Adds DarkLoop's Functions authentication middleware to the application pipeline.
+        /// </summary>
+        /// <param name="builder">The current builder.</param>
+        public static IFunctionsWorkerApplicationBuilder UseFunctionsAuthentication(this IFunctionsWorkerApplicationBuilder builder)
+        {
+            return builder.UseWhen<FunctionsAuthenticationMiddleware>(context =>
+              context.Features.Get<IFunctionsAuthorizationFeature>() is not null);
+        }
+
+        /// <summary>
+        /// Adds DarkLoop's Functions authorization middleware to the application pipeline.
+        /// </summary>
+        /// <param name="builder">The current builder.</param>
+        public static IFunctionsWorkerApplicationBuilder UseFunctionsAuthorization(this IFunctionsWorkerApplicationBuilder builder)
+        {
+            return builder.UseWhen<FunctionsAuthorizationMiddleware>(context =>
+              context.Features.Get<IFunctionsAuthorizationFeature>() is not null);
+        }
+
     }
-
-    /// <summary>
-    /// Adds DarkLoop's Functions authentication middleware to the application pipeline.
-    /// </summary>
-    /// <param name="builder">The current builder.</param>
-    public static IFunctionsWorkerApplicationBuilder UseFunctionsAuthentication(this IFunctionsWorkerApplicationBuilder builder)
-    {
-      return builder.UseWhen<FunctionsAuthenticationMiddleware>(context =>
-        context.Features.Get<IFunctionsAuthorizationFeature>() is not null);
-    }
-
-    /// <summary>
-    /// Adds DarkLoop's Functions authorization middleware to the application pipeline.
-    /// </summary>
-    /// <param name="builder">The current builder.</param>
-    public static IFunctionsWorkerApplicationBuilder UseFunctionsAuthorization(this IFunctionsWorkerApplicationBuilder builder)
-    {
-      return builder.UseWhen<FunctionsAuthorizationMiddleware>(context =>
-        context.Features.Get<IFunctionsAuthorizationFeature>() is not null);
-    }
-
-      }
 }
