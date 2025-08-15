@@ -13,74 +13,90 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DarkLoop.Azure.Functions.Authorization;
-
-internal sealed class FunctionsAuthenticationMiddleware : IFunctionsWorkerMiddleware
+namespace DarkLoop.Azure.Functions.Authorization
 {
-    private readonly ILogger<FunctionsAuthenticationMiddleware> _logger;
-    private readonly IAuthenticationHandlerProvider _authenticationHandlerProvider;
-    private readonly IAuthenticationSchemeProvider _authenticationSchemeProvider;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="FunctionsAuthenticationMiddleware"/> class.
-    /// </summary>
-    /// <param name="authenticationHandlerProvider">authentication handler provider.</param>
-    /// <param name="authenticationSchemeProvider">authentication scheme provider.</param>
-    /// <param name="logger">A logger object for diagnostics.</param>
-    public FunctionsAuthenticationMiddleware(
-        IAuthenticationHandlerProvider authenticationHandlerProvider,
-        IAuthenticationSchemeProvider authenticationSchemeProvider,
-        ILogger<FunctionsAuthenticationMiddleware> logger)
+    internal sealed class FunctionsAuthenticationMiddleware : IFunctionsWorkerMiddleware
     {
-        Check.NotNull(authenticationHandlerProvider, nameof(authenticationHandlerProvider));
-        Check.NotNull(authenticationSchemeProvider, nameof(authenticationSchemeProvider));
-        Check.NotNull(logger, nameof(logger));
+        #region Private Fields
 
-        _authenticationHandlerProvider = authenticationHandlerProvider;
-        _authenticationSchemeProvider = authenticationSchemeProvider;
-        _logger = logger;
-    }
+        private readonly IAuthenticationHandlerProvider _authenticationHandlerProvider;
+        private readonly IAuthenticationSchemeProvider _authenticationSchemeProvider;
+        private readonly ILogger<FunctionsAuthenticationMiddleware> _logger;
 
-    /// <inheritdoc />
-    public async Task Invoke(FunctionContext context, FunctionExecutionDelegate next)
-    {
-        var httpContext = context.GetHttpContext() ?? throw new NotSupportedException(IsolatedMessages.NotSupportedIsolatedMode);
+        #endregion Private Fields
 
-        foreach (var scheme in await _authenticationSchemeProvider.GetRequestHandlerSchemesAsync())
+        #region Public Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FunctionsAuthenticationMiddleware"/> class.
+        /// </summary>
+        /// <param name="authenticationHandlerProvider">authentication handler provider.</param>
+        /// <param name="authenticationSchemeProvider">authentication scheme provider.</param>
+        /// <param name="logger">A logger object for diagnostics.</param>
+        public FunctionsAuthenticationMiddleware(
+            IAuthenticationHandlerProvider authenticationHandlerProvider,
+            IAuthenticationSchemeProvider authenticationSchemeProvider,
+            ILogger<FunctionsAuthenticationMiddleware> logger)
         {
-            var handler = await _authenticationHandlerProvider.GetHandlerAsync(httpContext, scheme.Name) as IAuthenticationRequestHandler;
-            if (handler != null && await handler.HandleRequestAsync())
-            {
-                return;
-            }
+            Check.NotNull(authenticationHandlerProvider, nameof(authenticationHandlerProvider));
+            Check.NotNull(authenticationSchemeProvider, nameof(authenticationSchemeProvider));
+            Check.NotNull(logger, nameof(logger));
+
+            _authenticationHandlerProvider = authenticationHandlerProvider;
+            _authenticationSchemeProvider = authenticationSchemeProvider;
+            _logger = logger;
         }
 
-        var defaultAuthenticate = await _authenticationSchemeProvider.GetDefaultAuthenticateSchemeAsync();
-        if (defaultAuthenticate != null)
+        #endregion Public Constructors
+
+        #region Public Methods
+
+        /// <inheritdoc />
+        public async Task Invoke(FunctionContext context, FunctionExecutionDelegate next)
         {
-            var result = await httpContext.AuthenticateAsync(defaultAuthenticate.Name);
-            if (result?.Principal != null)
+            var httpContext = context.GetHttpContext() ??
+                              throw new NotSupportedException(IsolatedMessages.NotSupportedIsolatedMode);
+
+            foreach (var scheme in await _authenticationSchemeProvider.GetRequestHandlerSchemesAsync())
             {
-                httpContext.User = result.Principal;
+                var handler =
+                    await _authenticationHandlerProvider.GetHandlerAsync(httpContext, scheme.Name) as
+                        IAuthenticationRequestHandler;
+                if (handler != null && await handler.HandleRequestAsync())
+                {
+                    return;
+                }
             }
-            if (result?.Succeeded ?? false)
+
+            var defaultAuthenticate = await _authenticationSchemeProvider.GetDefaultAuthenticateSchemeAsync();
+            if (defaultAuthenticate != null)
             {
-                var authFeatures = httpContext.Features.SetAuthenticationFeatures(result);
-                context.Features.Set<IHttpAuthenticationFeature>(authFeatures);
-                context.Features.Set<IAuthenticateResultFeature>(authFeatures);
+                var result = await httpContext.AuthenticateAsync(defaultAuthenticate.Name);
+                if (result?.Principal != null)
+                {
+                    httpContext.User = result.Principal;
+                }
+
+                if (result?.Succeeded ?? false)
+                {
+                    var authFeatures = httpContext.Features.SetAuthenticationFeatures(result);
+                    context.Features.Set<IHttpAuthenticationFeature>(authFeatures);
+                    context.Features.Set<IAuthenticateResultFeature>(authFeatures);
+                }
+                else
+                {
+                    var allSchemes = (await _authenticationSchemeProvider.GetAllSchemesAsync()).ToList();
+                    _logger.LogDebug(
+                        IsolatedMessages.AuthenticationFailed,
+                        allSchemes.Count > 0
+                            ? " for " + string.Join(", ", allSchemes)
+                            : string.Empty);
+                }
             }
-            else
-            {
-                var allSchemes = (await _authenticationSchemeProvider.GetAllSchemesAsync()).ToList();
-                _logger.LogDebug(
-                    IsolatedMessages.AuthenticationFailed,
-                    allSchemes.Count > 0
-                    ? " for " + string.Join(", ", allSchemes)
-                    : string.Empty);
-            }
+
+            await next(context);
         }
 
-        await next(context);
+        #endregion Public Methods
     }
-
 }
