@@ -1,6 +1,9 @@
 # Change log
 Change log stars with version 3.1.3
 
+## 4.2.1
+- Adding check for `FunctionNameAttribute` when executing binding for InProcess mode. There are situations where other functions can be injected that are not decorated with attribute and also execute parameter binding.
+
 ## 4.2.0
 - Removing support for STS .NET versions (7.0), as these versions are not supported by Azure Functions runtime.
 - Removing ARM authentication support to align with Azure Functions runtime changes.
