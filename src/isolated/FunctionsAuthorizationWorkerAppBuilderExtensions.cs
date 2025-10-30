@@ -3,6 +3,7 @@
 // </copyright>
 
 using DarkLoop.Azure.Functions.Authorization;
+using DarkLoop.Azure.Functions.Authorization.Extensions;
 using DarkLoop.Azure.Functions.Authorization.Features;
 using Microsoft.Extensions.Hosting;
 
@@ -13,13 +14,45 @@ namespace Microsoft.Azure.Functions.Worker
     /// </summary>
     public static class FunctionsAuthorizationWorkerAppBuilderExtensions
     {
+
+        /// <summary>
+        /// Adds both DarkLoop's Functions authentication and authorization middleware to the application pipeline.
+        /// </summary>
+        /// <param name="builder">The current builder.</param>
+        public static IFunctionsWorkerApplicationBuilder UseFunctionsAuth(this IFunctionsWorkerApplicationBuilder builder)
+        {
+            builder.UseWhen<FunctionsAuthenticationMiddleware>(context =>
+                context.IsHttpTrigger() &&
+                context.Features.Get<IFunctionsAuthorizationFeature>() is not null);
+
+            builder.UseWhen<FunctionsAuthorizationMiddleware>(context =>
+                context.IsHttpTrigger() &&
+                context.Features.Get<IFunctionsAuthorizationFeature>() is not null);
+
+            return builder;
+        }
+
+        /// <summary>
+        /// Adds DarkLoop's Functions authentication middleware to the application pipeline.
+        /// if the function is an HTTP trigger and the <see cref="IFunctionsAuthorizationFeature"/> is available.
+        /// </summary>
+        /// <param name="builder">The current builder.</param>
+        public static IFunctionsWorkerApplicationBuilder UseFunctionsAuthentication(this IFunctionsWorkerApplicationBuilder builder)
+        {
+            return builder.UseWhen<FunctionsAuthenticationMiddleware>(context =>
+                context.IsHttpTrigger() &&
+                context.Features.Get<IFunctionsAuthorizationFeature>() is not null);
+        }
+
         /// <summary>
         /// Adds DarkLoop's Functions authorization middleware to the application pipeline.
+        /// if the function is an HTTP trigger and the <see cref="IFunctionsAuthorizationFeature"/> is available.
         /// </summary>
         /// <param name="builder">The current builder.</param>
         public static IFunctionsWorkerApplicationBuilder UseFunctionsAuthorization(this IFunctionsWorkerApplicationBuilder builder)
         {
             return builder.UseWhen<FunctionsAuthorizationMiddleware>(context =>
+                context.IsHttpTrigger() &&
                 context.Features.Get<IFunctionsAuthorizationFeature>() is not null);
         }
     }
